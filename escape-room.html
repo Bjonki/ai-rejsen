@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Enigma Vault — Escape Room</title>
+<style>
+/* ── Variables ──────────────────────────────────────────── */
+:root {
+  --bg:        #080a0f;
+  --bg2:       #0e1118;
+  --bg3:       #141820;
+  --green:     #00ff9f;
+  --green2:    #00c97a;
+  --amber:     #ffb347;
+  --red:       #ff4f6b;
+  --text:      #d8e0f0;
+  --muted:     #6b7a99;
+  --card:      rgba(0,255,159,0.04);
+  --border:    rgba(0,255,159,0.14);
+  --glow:      0 0 18px rgba(0,255,159,0.4);
+  --glow-lg:   0 0 40px rgba(0,255,159,0.25);
+  --font-mono: "Courier New", Courier, monospace;
+  --radius:    10px;
+}
+
+/* ── Reset & Base ───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ── Scanline Overlay ───────────────────────────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.06) 2px,
+    rgba(0,0,0,0.06) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  animation: scanroll 8s linear infinite;
+}
+@keyframes scanroll {
+  from { background-position: 0 0; }
+  to   { background-position: 0 200px; }
+}
+
+/* ── Particles canvas ───────────────────────────────────── */
+#particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* ── Layout ─────────────────────────────────────────────── */
+.page { position: relative; z-index: 1; }
+
+/* ── Hero ───────────────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  position: relative;
+}
+.hero-eyebrow {
+  font-size: .75rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 1rem;
+  animation: blink-cursor 1.2s step-start infinite;
+}
+@keyframes blink-cursor {
+  50% { opacity: 0; }
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 7vw, 5rem);
+  font-weight: 900;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+  background: linear-gradient(135deg, var(--green) 0%, #00e5ff 60%, var(--amber) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1.25rem;
+  text-shadow: none;
+  animation: flicker 6s ease-in-out infinite;
+}
+@keyframes flicker {
+  0%,100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: .7; }
+  94% { opacity: 1; }
+  96% { opacity: .8; }
+  97% { opacity: 1; }
+}
+.hero-sub {
+  max-width: 540px;
+  color: var(--muted);
+  font-size: .95rem;
+  margin-bottom: 2.5rem;
+}
+.hero-timer {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+.timer-box {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: .75rem 1.25rem;
+  text-align: center;
+  box-shadow: var(--glow);
+}
+.timer-box .num {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--green);
+  display: block;
+  line-height: 1;
+}
+.timer-box .lbl {
+  font-size: .65rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: .25rem;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .85rem 2rem;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--green);
+  background: transparent;
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: .95rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .2s, box-shadow .2s, transform .1s;
+}
+.btn:hover {
+  background: rgba(0,255,159,0.1);
+  box-shadow: var(--glow-lg);
+  transform: translateY(-2px);
+}
+.btn:active { transform: translateY(0); }
+.btn.amber { border-color: var(--amber); color: var(--amber); }
+.btn.amber:hover { background: rgba(255,179,71,0.1); box-shadow: 0 0 30px rgba(255,179,71,.3); }
+
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--muted);
+  font-size: .75rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  animation: bounce 2s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .4rem;
+}
+@keyframes bounce {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(8px); }
+}
+.scroll-hint::after {
+  content: "▼";
+  font-size: 1rem;
+  color: var(--green);
+}
+
+/* ── Progress Bar ───────────────────────────────────────── */
+.progress-section {
+  padding: 3rem 2rem 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.progress-label {
+  font-size: .75rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.progress-track {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  justify-content: center;
+}
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .4rem;
+  flex: 1;
+  max-width: 180px;
+}
+.step-dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: var(--muted);
+  background: var(--bg2);
+  transition: border-color .4s, color .4s, box-shadow .4s;
+  position: relative;
+}
+.step-dot::after {
+  content: attr(data-n);
+  font-weight: 700;
+  font-size: .85rem;
+}
+.step-dot.solved {
+  border-color: var(--green);
+  color: var(--green);
+  box-shadow: var(--glow);
+}
+.step-dot.solved::after { content: "✓"; }
+.step-dot.active {
+  border-color: var(--amber);
+  color: var(--amber);
+  box-shadow: 0 0 16px rgba(255,179,71,.5);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { box-shadow: 0 0 8px rgba(255,179,71,.5); }
+  50%      { box-shadow: 0 0 24px rgba(255,179,71,.8); }
+}
+.step-label {
+  font-size: .65rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+}
+.progress-step.solved .step-label { color: var(--green); }
+.progress-step.active .step-label { color: var(--amber); }
+.progress-connector {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  max-width: 80px;
+  transition: background .4s;
+}
+.progress-connector.filled { background: var(--green2); }
+
+/* ── Puzzle Sections ────────────────────────────────────── */
+.puzzles {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.puzzle-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: opacity .4s, transform .4s, border-color .4s, box-shadow .4s;
+}
+.puzzle-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,255,159,0.03), transparent 60%);
+  pointer-events: none;
+}
+.puzzle-card.locked {
+  opacity: .4;
+  pointer-events: none;
+  filter: grayscale(.6);
+}
+.puzzle-card.solved {
+  border-color: var(--green2);
+  box-shadow: var(--glow-lg);
+}
+.puzzle-card.solved::before {
+  background: linear-gradient(135deg, rgba(0,255,159,0.07), transparent 60%);
+}
+.puzzle-num {
+  font-size: .7rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .5rem;
+}
+.puzzle-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: .75rem;
+}
+.puzzle-desc {
+  color: var(--muted);
+  font-size: .88rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+}
+
+/* Cipher display */
+.cipher-table {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem;
+  margin-bottom: 1.5rem;
+  font-size: .72rem;
+}
+.cipher-pair {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: .2rem .45rem;
+  color: var(--muted);
+}
+.cipher-pair span { color: var(--green); font-weight: 700; }
+.encoded-word {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: .3em;
+  color: var(--amber);
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 20px rgba(255,179,71,.5);
+}
+
+/* Riddle display */
+.riddle-text {
+  font-size: 1.1rem;
+  color: var(--text);
+  font-style: italic;
+  border-left: 3px solid var(--green);
+  padding-left: 1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+.hint-box {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  color: var(--muted);
+  font-size: .85rem;
+  margin-bottom: 1.5rem;
+  display: none;
+}
+.hint-box.visible { display: block; }
+
+/* Sequence display */
+.sequence-row {
+  display: flex;
+  gap: .75rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.seq-num {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: var(--bg3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  transition: border-color .3s, color .3s, box-shadow .3s;
+}
+.seq-num.highlight {
+  border-color: var(--green);
+  color: var(--green);
+  box-shadow: var(--glow);
+}
+.seq-arrow { color: var(--muted); font-size: 1.2rem; }
+.seq-mystery {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  border: 2px dashed var(--amber);
+  background: rgba(255,179,71,.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--amber);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Input row */
+.input-row {
+  display: flex;
+  gap: .75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.puzzle-input {
+  flex: 1;
+  min-width: 160px;
+  padding: .75rem 1rem;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.puzzle-input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(0,255,159,.12);
+}
+.puzzle-input.error {
+  border-color: var(--red);
+  animation: shake .35s ease;
+}
+.puzzle-input.success {
+  border-color: var(--green);
+  box-shadow: var(--glow);
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%      { transform: translateX(-8px); }
+  40%      { transform: translateX(8px); }
+  60%      { transform: translateX(-5px); }
+  80%      { transform: translateX(5px); }
+}
+.feedback {
+  font-size: .82rem;
+  margin-top: .6rem;
+  min-height: 1.1rem;
+  transition: color .2s;
+}
+.feedback.ok   { color: var(--green); }
+.feedback.fail { color: var(--red); }
+
+/* Solved badge */
+.solved-badge {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: var(--green2);
+  color: #000;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  padding: .3rem .75rem;
+  border-radius: 99px;
+  opacity: 0;
+  transform: scale(.8);
+  transition: opacity .4s, transform .4s;
+}
+.puzzle-card.solved .solved-badge {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ── Vault Reveal ───────────────────────────────────────── */
+.vault-reveal {
+  max-width: 800px;
+  margin: 0 auto 4rem;
+  padding: 0 2rem;
+  display: none;
+}
+.vault-reveal.visible { display: block; }
+.vault-door {
+  background: var(--bg2);
+  border: 2px solid var(--green);
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  text-align: center;
+  box-shadow: var(--glow-lg), inset 0 0 60px rgba(0,255,159,.03);
+  position: relative;
+  overflow: hidden;
+  animation: vault-open .8s cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes vault-open {
+  from { clip-path: inset(50% 50% 50% 50% round 20px); opacity: 0; }
+  to   { clip-path: inset(0% 0% 0% 0% round 20px); opacity: 1; }
+}
+.vault-header {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--green);
+  text-shadow: var(--glow);
+  margin-bottom: .5rem;
+}
+.vault-sub {
+  color: var(--muted);
+  font-size: .88rem;
+  margin-bottom: 2.5rem;
+}
+
+/* Booking form */
+.booking-form {
+  text-align: left;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+@media (max-width: 520px) { .form-grid { grid-template-columns: 1fr; } }
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+.form-group.full { grid-column: 1 / -1; }
+.form-label {
+  font-size: .72rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.form-input, .form-select {
+  padding: .75rem 1rem;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: .9rem;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  width: 100%;
+}
+.form-input:focus, .form-select:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(0,255,159,.12);
+}
+.form-select option { background: var(--bg2); color: var(--text); }
+.form-select { cursor: pointer; }
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: .6rem;
+}
+.slot-btn {
+  padding: .65rem .5rem;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  background: var(--bg3);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: .82rem;
+  cursor: pointer;
+  transition: border-color .2s, color .2s, box-shadow .2s, background .2s;
+  text-align: center;
+}
+.slot-btn:hover {
+  border-color: var(--green);
+  color: var(--green);
+  background: rgba(0,255,159,.05);
+}
+.slot-btn.selected {
+  border-color: var(--green);
+  color: #000;
+  background: var(--green);
+  box-shadow: var(--glow);
+  font-weight: 700;
+}
+.slot-btn.full {
+  border-color: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.2);
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+.book-btn {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 1rem 2rem;
+  background: var(--green);
+  color: #000;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .2s, box-shadow .2s, transform .1s;
+  box-shadow: var(--glow);
+}
+.book-btn:hover { background: #00e5b5; box-shadow: var(--glow-lg); transform: translateY(-2px); }
+.book-btn:active { transform: translateY(0); }
+.book-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+/* Confirmation */
+.confirmation {
+  display: none;
+  text-align: center;
+  padding: 2rem;
+  animation: fade-in .6s ease both;
+}
+.confirmation.visible { display: block; }
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.conf-icon { font-size: 4rem; margin-bottom: 1rem; animation: spin-in .6s ease both; }
+@keyframes spin-in {
+  from { transform: scale(0) rotate(-90deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.conf-title { font-size: 1.5rem; font-weight: 900; color: var(--green); margin-bottom: .5rem; }
+.conf-sub { color: var(--muted); font-size: .9rem; }
+.conf-details {
+  margin-top: 1.5rem;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  text-align: left;
+  font-size: .85rem;
+}
+.conf-row { display: flex; justify-content: space-between; padding: .3rem 0; border-bottom: 1px solid var(--border); }
+.conf-row:last-child { border-bottom: none; }
+.conf-key { color: var(--muted); }
+.conf-val { color: var(--green); font-weight: 700; }
+
+/* ── Footer ─────────────────────────────────────────────── */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--muted);
+  font-size: .72rem;
+  letter-spacing: .1em;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Confetti canvas ────────────────────────────────────── */
+#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 1000; }
+
+/* ── Responsive tweaks ──────────────────────────────────── */
+@media (max-width: 600px) {
+  .puzzle-card { padding: 1.75rem 1.25rem; }
+  .encoded-word { font-size: 1.4rem; letter-spacing: .15em; }
+  .cipher-table { font-size: .65rem; }
+  .hero-timer { gap: .75rem; }
+  .timer-box .num { font-size: 1.5rem; }
+}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<canvas id="confetti"></canvas>
+
+<div class="page">
+
+  <!-- ── HERO ─────────────────────────────────────────── -->
+  <section class="hero">
+    <p class="hero-eyebrow">⚡ SYSTEM ONLINE — ACCESS RESTRICTED</p>
+    <h1>THE ENIGMA VAULT</h1>
+    <p class="hero-sub">
+      You are trapped. Three encrypted locks stand between you and freedom.
+      Crack every cipher. Solve every riddle. The room awaits those clever enough to escape.
+    </p>
+    <div class="hero-timer">
+      <div class="timer-box"><span class="num" id="t-h">00</span><span class="lbl">Hours</span></div>
+      <div class="timer-box"><span class="num" id="t-m">00</span><span class="lbl">Min</span></div>
+      <div class="timer-box"><span class="num" id="t-s">00</span><span class="lbl">Sec</span></div>
+    </div>
+    <button class="btn" onclick="document.querySelector('.progress-section').scrollIntoView({behavior:'smooth'})">
+      ▶ BEGIN YOUR ESCAPE
+    </button>
+    <span class="scroll-hint">Scroll to start</span>
+  </section>
+
+  <!-- ── PROGRESS ─────────────────────────────────────── -->
+  <div class="progress-section">
+    <p class="progress-label">[ VAULT LOCK STATUS ]</p>
+    <div class="progress-track">
+      <div class="progress-step active" id="ps-1">
+        <div class="step-dot active" data-n="1" id="sd-1"></div>
+        <span class="step-label">Cipher Lock</span>
+      </div>
+      <div class="progress-connector" id="pc-1"></div>
+      <div class="progress-step locked" id="ps-2">
+        <div class="step-dot" data-n="2" id="sd-2"></div>
+        <span class="step-label">The Riddle</span>
+      </div>
+      <div class="progress-connector" id="pc-2"></div>
+      <div class="progress-step locked" id="ps-3">
+        <div class="step-dot" data-n="3" id="sd-3"></div>
+        <span class="step-label">Number Vault</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PUZZLES ───────────────────────────────────────── -->
+  <div class="puzzles">
+
+    <!-- PUZZLE 1 — Cipher -->
+    <div class="puzzle-card" id="p1">
+      <div class="solved-badge">✓ SOLVED</div>
+      <p class="puzzle-num">[ LOCK 01 / 03 ]</p>
+      <h2 class="puzzle-title">🔐 The Cipher Lock</h2>
+      <p class="puzzle-desc">
+        An Atbash cipher scrambles the password. In Atbash, every letter is mirrored:
+        A↔Z, B↔Y, C↔X … The vault hisses the encoded message at you:
+      </p>
+      <div class="encoded-word" id="encoded-display">V · H · X · Z · K · V</div>
+      <p class="puzzle-desc" style="margin-bottom:1rem;">Use the key below to decode it:</p>
+      <div class="cipher-table" id="cipher-table"></div>
+      <div class="input-row">
+        <input class="puzzle-input" id="p1-input" type="text" maxlength="20"
+               placeholder="Type the decoded word…" autocomplete="off" spellcheck="false" />
+        <button class="btn" onclick="checkP1()">SUBMIT</button>
+        <button class="btn amber" onclick="toggleHint('h1')">HINT</button>
+      </div>
+      <p class="feedback" id="p1-fb"></p>
+      <div class="hint-box" id="h1">💡 Each letter of <strong>VHXZKV</strong> maps to its mirror in the alphabet. A=1, Z=26 — which pairs share the same distance from each end?</div>
+    </div>
+
+    <!-- PUZZLE 2 — Riddle -->
+    <div class="puzzle-card locked" id="p2">
+      <div class="solved-badge">✓ SOLVED</div>
+      <p class="puzzle-num">[ LOCK 02 / 03 ]</p>
+      <h2 class="puzzle-title">🧩 The Ancient Riddle</h2>
+      <p class="puzzle-desc">A voice echoes through the chamber walls…</p>
+      <div class="riddle-text">
+        "The more you take,<br>
+        the more you leave behind.<br>
+        I follow every traveller,<br>
+        yet I am never confined.<br>
+        What am I?"
+      </div>
+      <div class="input-row">
+        <input class="puzzle-input" id="p2-input" type="text" maxlength="30"
+               placeholder="Whisper the answer…" autocomplete="off" spellcheck="false" />
+        <button class="btn" onclick="checkP2()">SUBMIT</button>
+        <button class="btn amber" onclick="toggleHint('h2')">HINT</button>
+      </div>
+      <p class="feedback" id="p2-fb"></p>
+      <div class="hint-box" id="h2">💡 Think about what you physically leave in the ground when you walk somewhere.</div>
+    </div>
+
+    <!-- PUZZLE 3 — Sequence -->
+    <div class="puzzle-card locked" id="p3">
+      <div class="solved-badge">✓ SOLVED</div>
+      <p class="puzzle-num">[ LOCK 03 / 03 ]</p>
+      <h2 class="puzzle-title">🔢 The Number Vault</h2>
+      <p class="puzzle-desc">
+        A panel of numbers lights up. There is a clear pattern — find it and enter the missing value
+        to trigger the final release mechanism.
+      </p>
+      <div class="sequence-row" id="seq-row"></div>
+      <p class="puzzle-desc" style="margin-bottom:1rem; font-size:.8rem;">
+        Pattern note: each number is <em>n × (n+1)</em> for n = 1, 2, 3 …
+      </p>
+      <div class="input-row">
+        <input class="puzzle-input" id="p3-input" type="number" maxlength="6"
+               placeholder="Enter the next number…" autocomplete="off" />
+        <button class="btn" onclick="checkP3()">SUBMIT</button>
+        <button class="btn amber" onclick="toggleHint('h3')">HINT</button>
+      </div>
+      <p class="feedback" id="p3-fb"></p>
+      <div class="hint-box" id="h3">💡 n=1: 1×2=2, n=2: 2×3=6, n=3: 3×4=12 … what is n×(n+1) when n=6?</div>
+    </div>
+
+  </div><!-- /.puzzles -->
+
+  <!-- ── VAULT REVEAL ──────────────────────────────────── -->
+  <div class="vault-reveal" id="vault-reveal">
+    <div class="vault-door">
+
+      <!-- Booking form -->
+      <div id="booking-section">
+        <div class="vault-header">🏆 VAULT UNLOCKED</div>
+        <p class="vault-sub">Well done, Agent. You've earned your escape. Book your real-world session below.</p>
+
+        <form class="booking-form" id="booking-form" onsubmit="submitBooking(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" for="b-name">Full Name</label>
+              <input class="form-input" id="b-name" type="text" placeholder="Jane Doe" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="b-email">Email</label>
+              <input class="form-input" id="b-email" type="email" placeholder="you@example.com" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="b-date">Date</label>
+              <input class="form-input" id="b-date" type="date" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="b-size">Group Size</label>
+              <select class="form-select" id="b-size" required>
+                <option value="">Select…</option>
+                <option value="2">2 agents</option>
+                <option value="3">3 agents</option>
+                <option value="4">4 agents</option>
+                <option value="5">5 agents</option>
+                <option value="6">6 agents</option>
+                <option value="7">7 agents</option>
+                <option value="8">8 agents</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label class="form-label" for="b-diff">Difficulty</label>
+              <select class="form-select" id="b-diff" required>
+                <option value="">Select…</option>
+                <option value="Trainee">🟢 Trainee — First mission, guided</option>
+                <option value="Agent">🟡 Agent — Standard 60-minute challenge</option>
+                <option value="Operative">🟠 Operative — No hints allowed</option>
+                <option value="Phantom">🔴 Phantom — Lights off, you're on your own</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Time Slot</label>
+              <div class="slots-grid" id="slots-grid"></div>
+              <input type="hidden" id="b-slot" required />
+            </div>
+          </div>
+          <button class="book-btn" type="submit">🔐 CONFIRM BOOKING</button>
+        </form>
+      </div>
+
+      <!-- Confirmation screen -->
+      <div class="confirmation" id="confirmation">
+        <div class="conf-icon">🎉</div>
+        <h2 class="conf-title">MISSION ACCEPTED</h2>
+        <p class="conf-sub">Your escape is scheduled. Prepare to be challenged.</p>
+        <div class="conf-details" id="conf-details"></div>
+        <p style="color:var(--muted);font-size:.78rem;margin-top:1.25rem;">
+          A confirmation code has been logged to your terminal.<br>
+          See you at the Vault, Agent.
+        </p>
+      </div>
+
+    </div>
+  </div><!-- /.vault-reveal -->
+
+  <footer>THE ENIGMA VAULT — Escape Room Experience · All locks sealed by cryptographic necessity</footer>
+</div><!-- /.page -->
+
+<script>
+/* ── State ──────────────────────────────────────────────── */
+const solved = { p1: false, p2: false, p3: false };
+let selectedSlot = null;
+
+/* ── Particle background ─────────────────────────────────  */
+(function initParticles() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', () => { resize(); init(); });
+
+  function init() {
+    particles = Array.from({ length: 80 }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.5 + .3,
+      vx: (Math.random() - .5) * .35,
+      vy: (Math.random() - .5) * .35,
+      a: Math.random(),
+      da: (Math.random() * .006 + .002) * (Math.random() > .5 ? 1 : -1),
+    }));
+  }
+  init();
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x = (p.x + p.vx + W) % W;
+      p.y = (p.y + p.vy + H) % H;
+      p.a = Math.max(0, Math.min(1, p.a + p.da));
+      if (p.a <= 0 || p.a >= 1) p.da *= -1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0,255,159,${p.a * .6})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── Countdown to next booking slot ─────────────────────── */
+(function initTimer() {
+  function nextMidnight() {
+    const d = new Date();
+    d.setHours(24, 0, 0, 0);
+    return d.getTime();
+  }
+  function tick() {
+    const diff = nextMidnight() - Date.now();
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('t-h').textContent = String(h).padStart(2,'0');
+    document.getElementById('t-m').textContent = String(m).padStart(2,'0');
+    document.getElementById('t-s').textContent = String(s).padStart(2,'0');
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* ── Build cipher key table ──────────────────────────────── */
+(function buildCipherTable() {
+  const table = document.getElementById('cipher-table');
+  for (let i = 0; i < 26; i++) {
+    const plain = String.fromCharCode(65 + i);
+    const enc   = String.fromCharCode(65 + (25 - i));
+    const el = document.createElement('div');
+    el.className = 'cipher-pair';
+    el.innerHTML = `${plain}→<span>${enc}</span>`;
+    table.appendChild(el);
+  }
+})();
+
+/* ── Build sequence row ──────────────────────────────────── */
+(function buildSequence() {
+  const row = document.getElementById('seq-row');
+  const nums = [2, 6, 12, 20, 30];
+  nums.forEach((n, i) => {
+    const el = document.createElement('div');
+    el.className = 'seq-num' + (i === nums.length - 1 ? ' highlight' : '');
+    el.textContent = n;
+    row.appendChild(el);
+    if (i < nums.length - 1) {
+      const arr = document.createElement('span');
+      arr.className = 'seq-arrow';
+      arr.textContent = '→';
+      row.appendChild(arr);
+    }
+  });
+  const arr = document.createElement('span');
+  arr.className = 'seq-arrow';
+  arr.textContent = '→';
+  row.appendChild(arr);
+  const mystery = document.createElement('div');
+  mystery.className = 'seq-mystery';
+  mystery.textContent = '?';
+  row.appendChild(mystery);
+})();
+
+/* ── Build time slots ────────────────────────────────────── */
+function buildSlots() {
+  const grid = document.getElementById('slots-grid');
+  grid.innerHTML = '';
+  const times = ['10:00','12:00','14:00','16:00','18:00','20:00'];
+  const fullSlots = ['12:00','16:00']; // simulate some booked slots
+  times.forEach(t => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = t;
+    const isFull = fullSlots.includes(t);
+    btn.className = 'slot-btn' + (isFull ? ' full' : '');
+    if (isFull) {
+      btn.title = 'Fully booked';
+      btn.disabled = true;
+    } else {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.slot-btn:not(.full)').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedSlot = t;
+        document.getElementById('b-slot').value = t;
+      });
+    }
+    grid.appendChild(btn);
+  });
+}
+
+/* ── Date min ────────────────────────────────────────────── */
+function setDateMin() {
+  const inp = document.getElementById('b-date');
+  const today = new Date();
+  today.setDate(today.getDate() + 1); // earliest is tomorrow
+  inp.min = today.toISOString().split('T')[0];
+}
+
+/* ── Puzzle 1 — Atbash ───────────────────────────────────── */
+function checkP1() {
+  const raw = document.getElementById('p1-input').value.trim().toUpperCase();
+  const fb  = document.getElementById('p1-fb');
+  const inp = document.getElementById('p1-input');
+  if (raw === 'ESCAPE') {
+    markSolved('p1', 'p1-fb', 'p1-input');
+  } else {
+    showError('p1-input', 'p1-fb', randomWrong());
+  }
+}
+
+/* ── Puzzle 2 — Riddle ───────────────────────────────────── */
+function checkP2() {
+  const raw = document.getElementById('p2-input').value.trim().toLowerCase();
+  const valid = ['footsteps','footstep','steps','step'];
+  if (valid.includes(raw)) {
+    markSolved('p2', 'p2-fb', 'p2-input');
+  } else {
+    showError('p2-input', 'p2-fb', randomWrong());
+  }
+}
+
+/* ── Puzzle 3 — Sequence ─────────────────────────────────── */
+function checkP3() {
+  const raw = parseInt(document.getElementById('p3-input').value, 10);
+  if (raw === 42) {
+    markSolved('p3', 'p3-fb', 'p3-input');
+  } else {
+    showError('p3-input', 'p3-fb', randomWrong());
+  }
+}
+
+/* ── Enter key support ───────────────────────────────────── */
+document.getElementById('p1-input').addEventListener('keydown', e => { if(e.key==='Enter') checkP1(); });
+document.getElementById('p2-input').addEventListener('keydown', e => { if(e.key==='Enter') checkP2(); });
+document.getElementById('p3-input').addEventListener('keydown', e => { if(e.key==='Enter') checkP3(); });
+
+/* ── Helpers ─────────────────────────────────────────────── */
+const wrongMessages = [
+  '❌ ACCESS DENIED — Try again, Agent.',
+  '❌ INCORRECT — The vault remains sealed.',
+  '❌ WRONG CODE — Recalibrate your thinking.',
+  '❌ INVALID — The cipher mocks you.',
+];
+function randomWrong() {
+  return wrongMessages[Math.floor(Math.random() * wrongMessages.length)];
+}
+
+function showError(inputId, fbId, msg) {
+  const inp = document.getElementById(inputId);
+  const fb  = document.getElementById(fbId);
+  inp.classList.remove('error');
+  void inp.offsetWidth; // reflow to retrigger animation
+  inp.classList.add('error');
+  fb.textContent = msg;
+  fb.className = 'feedback fail';
+  setTimeout(() => inp.classList.remove('error'), 600);
+}
+
+function toggleHint(id) {
+  const box = document.getElementById(id);
+  box.classList.toggle('visible');
+}
+
+function markSolved(puzzleKey, fbId, inputId) {
+  solved[puzzleKey] = true;
+  const cardId = puzzleKey; // p1, p2, p3
+  const card = document.getElementById(cardId);
+  const inp  = document.getElementById(inputId);
+  const fb   = document.getElementById(fbId);
+
+  inp.classList.add('success');
+  inp.disabled = true;
+  fb.textContent = '✅ Correct! Lock released.';
+  fb.className = 'feedback ok';
+  card.classList.add('solved');
+
+  // Update progress dots
+  const n = parseInt(puzzleKey.replace('p',''), 10);
+  const dot = document.getElementById('sd-' + n);
+  const step = document.getElementById('ps-' + n);
+  dot.classList.remove('active');
+  dot.classList.add('solved');
+  step.classList.remove('active');
+  step.classList.add('solved');
+
+  // Unlock next puzzle
+  if (n < 3) {
+    const nextCard  = document.getElementById('p' + (n+1));
+    const nextStep  = document.getElementById('ps-' + (n+1));
+    const nextDot   = document.getElementById('sd-' + (n+1));
+    const connector = document.getElementById('pc-' + n);
+    nextCard.classList.remove('locked');
+    nextStep.classList.remove('locked');
+    nextStep.classList.add('active');
+    nextDot.classList.add('active');
+    connector.classList.add('filled');
+    setTimeout(() => nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' }), 400);
+  }
+
+  if (n === 3) {
+    document.getElementById('pc-2').classList.add('filled');
+  }
+
+  // Check if all done
+  if (solved.p1 && solved.p2 && solved.p3) {
+    setTimeout(revealVault, 700);
+  }
+}
+
+function revealVault() {
+  const section = document.getElementById('vault-reveal');
+  section.classList.add('visible');
+  buildSlots();
+  setDateMin();
+  setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+  launchConfetti();
+}
+
+/* ── Booking submission ──────────────────────────────────── */
+function submitBooking(e) {
+  e.preventDefault();
+  if (!selectedSlot) {
+    alert('Please select a time slot.');
+    return;
+  }
+  const name  = document.getElementById('b-name').value.trim();
+  const email = document.getElementById('b-email').value.trim();
+  const date  = document.getElementById('b-date').value;
+  const size  = document.getElementById('b-size').value;
+  const diff  = document.getElementById('b-diff').value;
+  const ref   = 'ENV-' + Math.random().toString(36).slice(2,8).toUpperCase();
+
+  const details = document.getElementById('conf-details');
+  details.innerHTML = `
+    <div class="conf-row"><span class="conf-key">Agent</span><span class="conf-val">${escHtml(name)}</span></div>
+    <div class="conf-row"><span class="conf-key">Email</span><span class="conf-val">${escHtml(email)}</span></div>
+    <div class="conf-row"><span class="conf-key">Date</span><span class="conf-val">${escHtml(date)}</span></div>
+    <div class="conf-row"><span class="conf-key">Time</span><span class="conf-val">${escHtml(selectedSlot)}</span></div>
+    <div class="conf-row"><span class="conf-key">Group</span><span class="conf-val">${escHtml(size)} agents</span></div>
+    <div class="conf-row"><span class="conf-key">Difficulty</span><span class="conf-val">${escHtml(diff)}</span></div>
+    <div class="conf-row"><span class="conf-key">Ref code</span><span class="conf-val">${ref}</span></div>
+  `;
+
+  document.getElementById('booking-section').style.display = 'none';
+  document.getElementById('confirmation').classList.add('visible');
+  launchConfetti();
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/* ── Confetti ────────────────────────────────────────────── */
+function launchConfetti() {
+  const canvas = document.getElementById('confetti');
+  const ctx    = canvas.getContext('2d');
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#00ff9f','#00e5ff','#ffb347','#ff4f6b','#c084fc','#fff'];
+  const pieces = Array.from({ length: 160 }, () => ({
+    x:   Math.random() * canvas.width,
+    y:   Math.random() * -canvas.height,
+    w:   Math.random() * 10 + 4,
+    h:   Math.random() * 6  + 2,
+    r:   Math.random() * Math.PI * 2,
+    vx:  (Math.random() - .5) * 3,
+    vy:  Math.random() * 4 + 2,
+    vr:  (Math.random() - .5) * .2,
+    c:   colors[Math.floor(Math.random() * colors.length)],
+    a:   1,
+  }));
+
+  let frame;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    pieces.forEach(p => {
+      p.x  += p.vx;
+      p.y  += p.vy;
+      p.r  += p.vr;
+      p.vy += .08; // gravity
+      if (p.y > canvas.height + 20) { p.y = -20; p.a *= .97; }
+      if (p.a < .01) return;
+      alive = true;
+      ctx.save();
+      ctx.globalAlpha = p.a;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.r);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    });
+    if (alive) {
+      frame = requestAnimationFrame(draw);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+  cancelAnimationFrame(frame);
+  draw();
+  setTimeout(() => { cancelAnimationFrame(frame); ctx.clearRect(0,0,canvas.width,canvas.height); }, 5000);
+}
+</script>
+</body>
+</html>
