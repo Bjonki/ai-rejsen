@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: campscout
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"

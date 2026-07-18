@@ -31,6 +31,22 @@ npm run dev
 
 Open http://localhost:3000
 
+## Deploy for iPhone access
+
+CampScout needs a Node.js server plus Chromium for the Playwright-backed scouting run, so this repository is configured for Docker deployment on Render.
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Bjonki/ai-rejsen)
+
+1. Open the deploy link above.
+2. Connect your GitHub account and approve the `Bjonki/ai-rejsen` repository.
+3. Let Render build and start the `campscout` web service from `/home/runner/work/ai-rejsen/ai-rejsen/render.yaml`.
+4. Open the generated `https://<service>.onrender.com` URL on your iPhone.
+
+Notes:
+
+- The public app URL is created by Render during deployment, so it does not exist until you complete the first deploy.
+- Scouting output is written to the container filesystem under `public/results/`, so those files persist until the service is rebuilt or restarted.
+
 ## CLI mode
 
 ```bash
