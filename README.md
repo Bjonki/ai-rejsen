@@ -39,7 +39,7 @@ CampScout needs a Node.js server plus Chromium for the Playwright-backed scoutin
 
 1. Open the deploy link above.
 2. Connect your GitHub account and approve the `Bjonki/ai-rejsen` repository.
-3. Let Render build and start the `campscout` web service from `/home/runner/work/ai-rejsen/ai-rejsen/render.yaml`.
+3. Let Render build and start the `campscout` web service from `render.yaml`.
 4. Open the generated `https://<service>.onrender.com` URL on your iPhone.
 
 Notes:
