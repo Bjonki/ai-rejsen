@@ -2,7 +2,10 @@ import type { ScoutRun } from "@/lib/campscout/schema";
 import { formatGuestSummary } from "@/lib/campscout/utils";
 
 function escapeCell(value: string | null | undefined) {
-  return (value ?? "—").replace(/\|/g, "\\|").replace(/\n/g, "<br/>");
+  return (value ?? "—")
+    .replace(/\\/g, "\\\\")
+    .replace(/\|/g, "\\|")
+    .replace(/\n/g, "<br/>");
 }
 
 export function buildMarkdownReport(run: ScoutRun) {

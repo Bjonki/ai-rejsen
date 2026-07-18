@@ -57,19 +57,20 @@ const BOOKING_LINK_PATTERNS = [
 ];
 
 function extractCurrencyAndPrice(text: string) {
-  const patterns = [
-    /(?<currency>SEK|EUR|DKK|NOK|USD)\s?(?<amount>\d[\d.,]*)/i,
-    /(?<amount>\d[\d.,]*)\s?(?<currency>SEK|EUR|DKK|NOK|USD|kr)/i,
-  ];
+  const leadingCurrency = text.match(/(SEK|EUR|DKK|NOK|USD)\s?(\d[\d.,]*)/i);
+  if (leadingCurrency) {
+    return {
+      currency: leadingCurrency[1]?.toUpperCase() ?? null,
+      price: leadingCurrency[2] ?? null,
+    };
+  }
 
-  for (const pattern of patterns) {
-    const match = text.match(pattern);
-    if (match?.groups?.amount) {
-      return {
-        price: match.groups.amount,
-        currency: match.groups.currency?.toUpperCase() ?? null,
-      };
-    }
+  const trailingCurrency = text.match(/(\d[\d.,]*)\s?(SEK|EUR|DKK|NOK|USD|kr)/i);
+  if (trailingCurrency) {
+    return {
+      currency: trailingCurrency[2]?.toUpperCase() ?? null,
+      price: trailingCurrency[1] ?? null,
+    };
   }
 
   return { price: null, currency: null };
@@ -304,7 +305,7 @@ class ManualOnlyAdapter implements AvailabilityAdapter {
     return source.adapter === this.id || source.sourceType === "manual";
   }
 
-  async search({ source, context }: SearchRequest) {
+  async search({ source, context }: SearchRequest): Promise<ScoutResult> {
     const page = await context.browserContext.newPage();
 
     try {
@@ -346,7 +347,7 @@ class DirectoryAdapter implements AvailabilityAdapter {
     return source.adapter === this.id || source.sourceType === "tourism-directory";
   }
 
-  async search({ source, context }: SearchRequest) {
+  async search({ source, context }: SearchRequest): Promise<ScoutResult> {
     const page = await context.browserContext.newPage();
 
     try {
@@ -392,7 +393,7 @@ class GenericSiteAdapter implements AvailabilityAdapter {
     return source.adapter === this.id || source.sourceType !== "manual";
   }
 
-  async search({ source, input, context }: SearchRequest) {
+  async search({ source, input, context }: SearchRequest): Promise<ScoutResult> {
     const page = await context.browserContext.newPage();
 
     try {

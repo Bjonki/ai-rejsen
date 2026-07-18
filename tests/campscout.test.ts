@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { buildMarkdownReport } from "@/lib/campscout/report";
-import { defaultSearchInput } from "@/lib/campscout/defaults";
-import { createRunId, formatGuestSummary, slugify } from "@/lib/campscout/utils";
+import { buildMarkdownReport } from "../lib/campscout/report";
+import { defaultSearchInput } from "../lib/campscout/defaults";
+import { createRunId, formatGuestSummary, slugify } from "../lib/campscout/utils";
 
 describe("CampScout helpers", () => {
   it("creates a stable run id from destination and date", () => {

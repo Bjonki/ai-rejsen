@@ -102,11 +102,19 @@ export function CampScoutApp({
 
       const payload = (await response.json()) as ScoutRun | { error?: string };
 
-      if (!response.ok || "error" in payload) {
+      if (!response.ok) {
+        throw new Error(
+          "error" in payload && payload.error
+            ? payload.error
+            : "CampScout could not complete the run.",
+        );
+      }
+
+      if ("error" in payload) {
         throw new Error(payload.error ?? "CampScout could not complete the run.");
       }
 
-      setRun(payload);
+      setRun(payload as ScoutRun);
     } catch (caughtError) {
       setError(
         caughtError instanceof Error
