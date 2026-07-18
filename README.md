@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CampScout
 
-## Getting Started
+CampScout is a lightweight browser-assisted accommodation availability scout.
 
-First, run the development server:
+It is designed to:
+
+- search a curated registry of accommodation sources
+- open each source with Playwright
+- try safe, reversible search actions such as dates and guest counts
+- capture screenshots as evidence
+- classify results as verified available, verified unavailable, could not verify, or manual verification required
+- stop before any booking, payment, or legally binding reservation step
+
+## Stack
+
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Playwright
+- JSON file storage
+- Zod
+- Vitest
+
+## Local development
 
 ```bash
+npm install
+npx playwright install chromium
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## CLI mode
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run scout -- \
+  --destination "Vallåsen" \
+  --checkin "2026-07-20" \
+  --checkout "2026-07-21" \
+  --adults 2 \
+  --children 8,5
+```
 
-## Learn More
+Outputs are written to:
 
-To learn more about Next.js, take a look at the following resources:
+```text
+public/results/<run-slug>/
+  report.md
+  results.json
+  screenshots/
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+These files are also available from the browser at `/results/<run-slug>/...`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Safety boundaries
 
-## Deploy on Vercel
+CampScout may:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- accept cookie banners
+- enter dates and guest counts when fields are obvious
+- follow booking-related links
+- capture screenshots
+- extract price and policy clues
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+CampScout must not:
+
+- log into personal accounts
+- enter payment details
+- submit reservations
+- accept binding terms
+- bypass CAPTCHA or access controls
+- claim verification when it could not verify the result
+
+## Notes on the starter adapters
+
+This implementation intentionally starts with honest, conservative adapters.
+
+- Aggregator and tourism sources use discovery-first flows.
+- When availability cannot be safely confirmed, results are marked `MANUAL_VERIFICATION_REQUIRED` or `COULD_NOT_VERIFY`.
+- The adapter contract is ready for future source-specific upgrades without rewriting the app shell.
