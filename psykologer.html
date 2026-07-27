@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Psykologerne ved Slotssøen — Kolding</title>
+  <style>
+    /* ──────────────────────────────────────────────
+       DESIGN TOKENS
+    ────────────────────────────────────────────── */
+    :root {
+      --sage:    #4a7c6f;
+      --sage-lt: #6aab9b;
+      --sage-dk: #2e5548;
+      --water:   #a8d5c2;
+      --water-lt:#d6ede7;
+      --gold:    #c9a84c;
+      --gold-lt: #e8d08a;
+      --cream:   #f7f4ef;
+      --ink:     #1a2320;
+      --mist:    #e8f0ec;
+      --slate:   #4a5f58;
+      --white:   #ffffff;
+      --shadow:  rgba(42,74,62,.15);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ──────────────────────────────────────────────
+       NAVIGATION
+    ────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 5vw;
+      background: rgba(247,244,239,.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(74,124,111,.15);
+      transition: box-shadow .3s;
+    }
+    nav.scrolled { box-shadow: 0 4px 24px var(--shadow); }
+    .nav-logo {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+      color: var(--sage-dk);
+      line-height: 1.3;
+    }
+    .nav-logo span { display: block; font-weight: 400; font-size: .8rem; color: var(--slate); letter-spacing: .06em; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 2.2rem; font-size: .9rem; font-family: 'Helvetica Neue', Arial, sans-serif; }
+    .nav-links a { color: var(--slate); transition: color .2s; letter-spacing: .04em; }
+    .nav-links a:hover { color: var(--sage); }
+    .nav-cta {
+      background: var(--sage);
+      color: var(--white);
+      padding: .55rem 1.4rem;
+      border-radius: 50px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .85rem;
+      letter-spacing: .05em;
+      transition: background .25s, transform .2s;
+    }
+    .nav-cta:hover { background: var(--sage-dk); transform: translateY(-1px); }
+
+    /* ──────────────────────────────────────────────
+       HERO
+    ────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      overflow: hidden;
+      padding: 10vh 5vw 8vh;
+    }
+
+    /* Animated lake canvas behind hero */
+    #lake-canvas {
+      position: absolute; inset: 0; z-index: 0;
+    }
+
+    /* Soft gradient veil over canvas */
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background:
+        linear-gradient(160deg, rgba(247,244,239,.88) 0%, rgba(247,244,239,.60) 45%, rgba(168,213,194,.25) 100%);
+    }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 720px;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: .6rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .78rem; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 1.6rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block; width: 28px; height: 2px;
+      background: var(--sage);
+    }
+    .hero-h1 {
+      font-size: clamp(2.6rem, 6vw, 5.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 1.6rem;
+      letter-spacing: -.02em;
+    }
+    .hero-h1 em {
+      font-style: normal;
+      color: var(--sage);
+      position: relative;
+    }
+    .hero-h1 em::after {
+      content: '';
+      position: absolute; left: 0; bottom: -4px; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--sage), var(--water));
+      border-radius: 2px;
+    }
+    .hero-sub {
+      font-size: 1.18rem;
+      color: var(--slate);
+      max-width: 520px;
+      margin-bottom: 2.8rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 300;
+      line-height: 1.8;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      padding: 1rem 2.2rem;
+      background: var(--sage);
+      color: var(--white);
+      border-radius: 50px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .95rem;
+      letter-spacing: .04em;
+      transition: background .25s, transform .2s, box-shadow .25s;
+      box-shadow: 0 4px 24px rgba(74,124,111,.25);
+    }
+    .btn-primary:hover {
+      background: var(--sage-dk);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(74,124,111,.35);
+    }
+    .btn-secondary {
+      padding: 1rem 2.2rem;
+      border: 2px solid var(--sage);
+      color: var(--sage);
+      border-radius: 50px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .95rem;
+      letter-spacing: .04em;
+      transition: background .25s, color .25s, transform .2s;
+    }
+    .btn-secondary:hover {
+      background: var(--sage);
+      color: var(--white);
+      transform: translateY(-2px);
+    }
+
+    /* Hero stats row */
+    .hero-stats {
+      position: relative; z-index: 2;
+      display: flex; gap: 3rem; flex-wrap: wrap;
+      margin-top: 6vh;
+      padding-top: 3vh;
+      border-top: 1px solid rgba(74,124,111,.2);
+    }
+    .stat-item { }
+    .stat-num {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--sage);
+      letter-spacing: -.03em;
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .78rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-top: .3rem;
+    }
+
+    /* Floating accent card */
+    .hero-accent {
+      position: absolute; right: 5vw; top: 50%;
+      transform: translateY(-50%);
+      z-index: 3;
+      width: 320px;
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(42,74,62,.18);
+      border: 1px solid rgba(74,124,111,.12);
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .accent-tag {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .7rem; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--sage);
+      font-weight: 600;
+    }
+    .accent-quote {
+      font-size: 1.05rem;
+      color: var(--ink);
+      line-height: 1.6;
+      font-style: italic;
+    }
+    .accent-divider {
+      width: 40px; height: 2px;
+      background: linear-gradient(90deg, var(--sage), var(--water));
+      border-radius: 2px;
+    }
+    .accent-loc {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .82rem; color: var(--slate);
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .accent-loc svg { flex-shrink: 0; }
+
+    /* ──────────────────────────────────────────────
+       WAVE DIVIDER
+    ────────────────────────────────────────────── */
+    .wave-wrap {
+      line-height: 0;
+      margin-top: -2px;
+    }
+    .wave-wrap svg { display: block; width: 100%; }
+
+    /* ──────────────────────────────────────────────
+       SECTION LAYOUT
+    ────────────────────────────────────────────── */
+    section { position: relative; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 5vw; }
+    .section-pad { padding: 7rem 0; }
+
+    .section-label {
+      display: inline-flex; align-items: center; gap: .6rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .75rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--sage);
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+    }
+    .section-label::before {
+      content: '';
+      width: 22px; height: 2px;
+      background: var(--sage);
+    }
+    .section-title {
+      font-size: clamp(1.9rem, 3.5vw, 3rem);
+      font-weight: 700; line-height: 1.15;
+      letter-spacing: -.02em;
+      color: var(--ink);
+      margin-bottom: 1.2rem;
+    }
+    .section-sub {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1.05rem;
+      color: var(--slate);
+      line-height: 1.8;
+      max-width: 580px;
+    }
+
+    /* ──────────────────────────────────────────────
+       INTRO / ABOUT BAND
+    ────────────────────────────────────────────── */
+    .intro-band {
+      background: var(--sage);
+      color: var(--white);
+      padding: 5rem 0;
+    }
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .intro-grid h2 {
+      font-size: clamp(1.7rem, 3vw, 2.6rem);
+      line-height: 1.2;
+      font-weight: 700;
+      margin-bottom: 1.4rem;
+    }
+    .intro-grid p {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.85;
+      opacity: .88;
+      margin-bottom: 1rem;
+    }
+    .intro-features {
+      display: flex; flex-direction: column; gap: 1.5rem;
+    }
+    .intro-feat {
+      display: flex; align-items: flex-start; gap: 1rem;
+    }
+    .feat-icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+      background: rgba(255,255,255,.15);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+    .feat-text h4 {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .95rem; font-weight: 600;
+      margin-bottom: .2rem;
+    }
+    .feat-text p {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .85rem; opacity: .78; line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ──────────────────────────────────────────────
+       SERVICES
+    ────────────────────────────────────────────── */
+    .services-bg { background: var(--mist); }
+    .services-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .services-header .section-label { justify-content: center; }
+    .services-header .section-label::before { display: none; }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.8rem;
+    }
+    .service-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2.2rem 2rem;
+      border: 1px solid rgba(74,124,111,.1);
+      transition: transform .3s, box-shadow .3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--sage), var(--water));
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .service-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(42,74,62,.12); }
+    .service-card:hover::before { opacity: 1; }
+    .service-icon {
+      width: 56px; height: 56px;
+      background: var(--mist);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 1.4rem;
+      transition: background .3s;
+    }
+    .service-card:hover .service-icon { background: var(--water-lt); }
+    .service-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: .6rem;
+      line-height: 1.3;
+    }
+    .service-card p {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .9rem;
+      color: var(--slate);
+      line-height: 1.7;
+    }
+    .service-tags {
+      display: flex; flex-wrap: wrap; gap: .4rem;
+      margin-top: 1.2rem;
+    }
+    .tag {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .72rem;
+      letter-spacing: .06em;
+      padding: .25rem .7rem;
+      border-radius: 50px;
+      background: var(--mist);
+      color: var(--sage-dk);
+      border: 1px solid rgba(74,124,111,.15);
+    }
+
+    /* Extra wide service card */
+    .service-card.wide { grid-column: span 2; }
+    .service-card.wide .service-card-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* ──────────────────────────────────────────────
+       APPROACH / METHODS
+    ────────────────────────────────────────────── */
+    .approach-section { background: var(--cream); }
+    .approach-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 6rem;
+      align-items: center;
+    }
+    .approach-visual {
+      position: relative;
+    }
+    .approach-big-circle {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, var(--water-lt), var(--mist) 60%, var(--sage-lt) 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      box-shadow: 0 0 0 1px rgba(74,124,111,.12), 0 30px 80px rgba(74,124,111,.15);
+    }
+    .approach-inner-text {
+      text-align: center; padding: 2rem;
+    }
+    .approach-inner-text .big-num {
+      font-size: 5rem; font-weight: 700; color: var(--sage);
+      line-height: 1; letter-spacing: -.04em;
+    }
+    .approach-inner-text p {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .85rem; color: var(--slate); letter-spacing: .06em;
+      text-transform: uppercase; margin-top: .4rem;
+    }
+    .approach-orbit {
+      position: absolute;
+      width: 76px; height: 76px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2px solid rgba(74,124,111,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 8px 24px rgba(42,74,62,.1);
+    }
+    .orbit-1 { top: -10px; right: 5%; }
+    .orbit-2 { bottom: 8%; right: -5%; }
+    .orbit-3 { bottom: 5%; left: -2%; }
+
+    .approach-list {
+      display: flex; flex-direction: column; gap: 2.2rem;
+    }
+    .approach-item {
+      display: flex; gap: 1.4rem; align-items: flex-start;
+    }
+    .approach-num {
+      width: 42px; height: 42px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--sage);
+      color: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .9rem; font-weight: 700;
+    }
+    .approach-item h4 {
+      font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: .3rem;
+    }
+    .approach-item p {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .88rem; color: var(--slate); line-height: 1.7;
+    }
+
+    /* ──────────────────────────────────────────────
+       TEAM
+    ────────────────────────────────────────────── */
+    .team-section { background: var(--ink); color: var(--white); }
+    .team-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 4rem;
+      flex-wrap: wrap; gap: 1.5rem;
+    }
+    .team-header .section-label { color: var(--water); }
+    .team-header .section-label::before { background: var(--water); }
+    .team-header .section-title { color: var(--white); }
+    .team-header .section-sub { color: rgba(255,255,255,.65); }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    .team-card {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform .3s, box-shadow .3s, border-color .3s;
+    }
+    .team-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 24px 60px rgba(0,0,0,.4);
+      border-color: rgba(106,171,155,.35);
+    }
+    .team-avatar {
+      width: 100%;
+      aspect-ratio: 3/4;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Stylised avatar placeholder with initials */
+    .avatar-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem; font-weight: 700;
+      letter-spacing: -.02em;
+      color: var(--white);
+      position: relative;
+    }
+    .avatar-placeholder::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 80%, rgba(0,0,0,.3), transparent 60%);
+    }
+    .ap-1 { background: linear-gradient(145deg, #4a7c6f, #2e8b72); }
+    .ap-2 { background: linear-gradient(145deg, #3d6b6b, #285f5f); }
+    .ap-3 { background: linear-gradient(145deg, #5c7a62, #3b5e41); }
+    .ap-4 { background: linear-gradient(145deg, #4e6978, #2c4b5c); }
+
+    .team-info { padding: 1.6rem; }
+    .team-info h3 {
+      font-size: 1rem; font-weight: 700; color: var(--white);
+      margin-bottom: .2rem; line-height: 1.3;
+    }
+    .team-role {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .75rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--water);
+      margin-bottom: .8rem;
+    }
+    .team-bio {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .82rem;
+      color: rgba(255,255,255,.6);
+      line-height: 1.65;
+      margin-bottom: 1rem;
+    }
+    .team-chips {
+      display: flex; flex-wrap: wrap; gap: .35rem;
+    }
+    .chip {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .68rem;
+      padding: .2rem .6rem;
+      border-radius: 50px;
+      background: rgba(106,171,155,.15);
+      color: var(--water);
+      border: 1px solid rgba(106,171,155,.25);
+    }
+
+    /* ──────────────────────────────────────────────
+       TESTIMONIAL
+    ────────────────────────────────────────────── */
+    .testimonial-section { background: var(--water-lt); }
+    .testimonial-inner {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .testimonial-icon {
+      font-size: 3.5rem; line-height: 1;
+      color: var(--sage-lt);
+      margin-bottom: 2rem;
+    }
+    .testimonial-text {
+      font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+      line-height: 1.6;
+      color: var(--ink);
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+    .testimonial-attr {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .85rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    /* ──────────────────────────────────────────────
+       PRACTICAL INFO
+    ────────────────────────────────────────────── */
+    .practical-section { background: var(--cream); }
+    .practical-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .prac-card {
+      padding: 2rem 1.8rem;
+      background: var(--white);
+      border-radius: 18px;
+      border: 1px solid rgba(74,124,111,.1);
+    }
+    .prac-icon {
+      font-size: 2rem; margin-bottom: 1rem;
+    }
+    .prac-card h4 {
+      font-size: 1rem; font-weight: 700;
+      color: var(--ink); margin-bottom: .6rem;
+    }
+    .prac-card p, .prac-card address {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .9rem; color: var(--slate);
+      line-height: 1.7;
+      font-style: normal;
+    }
+
+    /* ──────────────────────────────────────────────
+       CONTACT CTA BAND
+    ────────────────────────────────────────────── */
+    .cta-band {
+      background: linear-gradient(135deg, var(--sage-dk) 0%, var(--sage) 60%, var(--sage-lt) 100%);
+      color: var(--white);
+      padding: 7rem 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-band::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .cta-inner { position: relative; z-index: 1; }
+    .cta-label {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .75rem; letter-spacing: .2em; text-transform: uppercase;
+      color: rgba(255,255,255,.7);
+      margin-bottom: 1rem;
+    }
+    .cta-title {
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 700; line-height: 1.15;
+      margin-bottom: 1.4rem;
+      letter-spacing: -.02em;
+    }
+    .cta-sub {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,.78);
+      max-width: 500px; margin: 0 auto 2.8rem;
+      line-height: 1.7;
+    }
+    .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-white {
+      padding: 1rem 2.4rem;
+      background: var(--white);
+      color: var(--sage-dk);
+      border-radius: 50px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .95rem; font-weight: 600;
+      letter-spacing: .04em;
+      transition: transform .2s, box-shadow .25s;
+      box-shadow: 0 4px 20px rgba(0,0,0,.2);
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,.28); }
+    .btn-ghost-white {
+      padding: 1rem 2.4rem;
+      border: 2px solid rgba(255,255,255,.6);
+      color: var(--white);
+      border-radius: 50px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .95rem;
+      letter-spacing: .04em;
+      transition: background .25s, transform .2s;
+    }
+    .btn-ghost-white:hover { background: rgba(255,255,255,.12); transform: translateY(-2px); }
+
+    /* ──────────────────────────────────────────────
+       FOOTER
+    ────────────────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      color: rgba(255,255,255,.55);
+      padding: 4rem 0 2.5rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .88rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .footer-brand .name {
+      font-size: 1rem; font-weight: 700; color: var(--white);
+      line-height: 1.3; margin-bottom: .8rem;
+    }
+    .footer-brand p { line-height: 1.7; margin-bottom: 1rem; }
+    .footer-brand .address { line-height: 1.7; }
+    .footer-col h5 {
+      color: var(--white); font-size: .8rem;
+      letter-spacing: .12em; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .6rem; }
+    .footer-col ul a { transition: color .2s; }
+    .footer-col ul a:hover { color: var(--water); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-bottom a { color: var(--water); }
+
+    /* ──────────────────────────────────────────────
+       SCROLL ANIMATIONS
+    ────────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .65s ease, transform .65s cubic-bezier(.2,.7,.2,1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+    .reveal-delay-1 { transition-delay: .1s; }
+    .reveal-delay-2 { transition-delay: .2s; }
+    .reveal-delay-3 { transition-delay: .3s; }
+    .reveal-delay-4 { transition-delay: .4s; }
+
+    /* ──────────────────────────────────────────────
+       RESPONSIVE
+    ────────────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .hero-accent { display: none; }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .intro-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .services-grid { grid-template-columns: 1fr; }
+      .service-card.wide { grid-column: span 1; }
+      .service-card.wide .service-card-inner { grid-template-columns: 1fr; gap: 1rem; }
+      .approach-grid { grid-template-columns: 1fr; }
+      .approach-visual { max-width: 300px; margin: 0 auto; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+      .practical-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-stats { gap: 2rem; }
+    }
+    @media (max-width: 480px) {
+      .team-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     NAVIGATION
+══════════════════════════════════════════ -->
+<nav id="nav">
+  <div class="nav-logo">
+    Psykologerne ved Slotssøen
+    <span>Autoriserede psykologer · Kolding</span>
+  </div>
+  <div class="nav-links">
+    <a href="#ydelser">Ydelser</a>
+    <a href="#tilgang">Tilgang</a>
+    <a href="#team">Psykologer</a>
+    <a href="#praktisk">Praktisk info</a>
+  </div>
+  <a href="tel:+4575526070" class="nav-cta">Kontakt os</a>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section class="hero">
+  <canvas id="lake-canvas"></canvas>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Autoriserede psykologer i Kolding</div>
+    <h1 class="hero-h1">
+      Et trygt sted at<br>
+      <em>finde vej</em><br>
+      til dig selv
+    </h1>
+    <p class="hero-sub">
+      Vi er fire autoriserede psykologer med speciale i terapi, rådgivning og
+      psykologisk udredning — for børn, unge, voksne og par.
+    </p>
+    <div class="hero-actions">
+      <a href="#kontakt" class="btn-primary">Book en tid</a>
+      <a href="#ydelser" class="btn-secondary">Vores ydelser</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Autoriserede psykologer</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">35+</div>
+      <div class="stat-label">Års samlet erfaring</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">10+</div>
+      <div class="stat-label">Specialområder</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">Kolding</div>
+      <div class="stat-label">Fredericiagade 30</div>
+    </div>
+  </div>
+
+  <!-- Floating accent card (hidden on mobile) -->
+  <div class="hero-accent">
+    <div class="accent-tag">Vores tilgang</div>
+    <p class="accent-quote">
+      "Vi møder dig, der hvor du er — med nærvær, faglighed og respekt for din unikke livshistorie."
+    </p>
+    <div class="accent-divider"></div>
+    <div class="accent-loc">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+        <circle cx="12" cy="10" r="3"/>
+      </svg>
+      Fredericiagade 30, 6000 Kolding
+    </div>
+  </div>
+</section>
+
+<!-- wave -->
+<div class="wave-wrap">
+  <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,40 C240,60 480,0 720,30 C960,60 1200,10 1440,40 L1440,60 L0,60 Z" fill="#4a7c6f"/>
+  </svg>
+</div>
+
+<!-- ══════════════════════════════════════════
+     INTRO BAND
+══════════════════════════════════════════ -->
+<section class="intro-band">
+  <div class="container">
+    <div class="intro-grid">
+      <div class="reveal">
+        <h2>Velkommen hos<br>Psykologerne ved Slotssøen</h2>
+        <p>Vi er en veletableret psykologklinik beliggende i hjertet af Kolding, tæt på den smukke Slotssø. Hos os møder du engagerede og erfarne psykologer, som tilbyder professionel hjælp til mennesker i alle livets faser.</p>
+        <p>Alle vores psykologer er autoriserede og arbejder ud fra anerkendte metoder som kognitiv adfærdsterapi, EMDR, psykodynamisk terapi og mindfulness — altid tilpasset dig og dine behov.</p>
+      </div>
+      <div class="intro-features reveal reveal-delay-2">
+        <div class="intro-feat">
+          <div class="feat-icon">🌿</div>
+          <div class="feat-text">
+            <h4>Trygge rammer</h4>
+            <p>Et fortroligt og varmt miljø, hvor du kan tale åbent og ærligt.</p>
+          </div>
+        </div>
+        <div class="intro-feat">
+          <div class="feat-icon">🎓</div>
+          <div class="feat-text">
+            <h4>Høj faglighed</h4>
+            <p>Alle psykologer er autoriserede af Psykolognævnet med løbende efteruddannelse.</p>
+          </div>
+        </div>
+        <div class="intro-feat">
+          <div class="feat-icon">🤝</div>
+          <div class="feat-text">
+            <h4>Individuel tilgang</h4>
+            <p>Vi tilpasser forløbet til dig — din historia, dine mål og dine ressourcer.</p>
+          </div>
+        </div>
+        <div class="intro-feat">
+          <div class="feat-icon">⚡</div>
+          <div class="feat-text">
+            <h4>Akut krisehjælp</h4>
+            <p>Vi tilbyder psykologisk krisehjælp ved voldsomme hændelser — efter aftale.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SERVICES
+══════════════════════════════════════════ -->
+<section id="ydelser" class="services-bg section-pad">
+  <div class="container">
+    <div class="services-header reveal">
+      <div class="section-label">Hvad vi tilbyder</div>
+      <h2 class="section-title">Vores ydelser</h2>
+      <p class="section-sub" style="margin:0 auto;">Fra individuel terapi til psykologisk udredning — vi dækker et bredt spektrum af psykologiske indsatser.</p>
+    </div>
+
+    <div class="services-grid">
+
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-icon">🧠</div>
+        <h3>Individuel terapi</h3>
+        <p>Forløb for børn, unge og voksne med fokus på trivsel og personlig udvikling. Vi arbejder med dig, der hvor du er.</p>
+        <div class="service-tags">
+          <span class="tag">Angst</span>
+          <span class="tag">Depression</span>
+          <span class="tag">Stress</span>
+          <span class="tag">Selvværd</span>
+        </div>
+      </div>
+
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-icon">👫</div>
+        <h3>Par- og familieterapi</h3>
+        <p>Hjælp til par og familier i krise, med kommunikationsudfordringer eller behov for genopbygning af relationen.</p>
+        <div class="service-tags">
+          <span class="tag">Parterapi</span>
+          <span class="tag">Familierådgivning</span>
+          <span class="tag">Skilsmisse</span>
+        </div>
+      </div>
+
+      <div class="service-card reveal reveal-delay-3">
+        <div class="service-icon">👥</div>
+        <h3>Gruppeterapi</h3>
+        <p>Terapeutiske grupper, kurser og forløb for mennesker med fælles udfordringer — et stærkt fællesskab med faglig støtte.</p>
+        <div class="service-tags">
+          <span class="tag">Angsthåndtering</span>
+          <span class="tag">Sorggrupper</span>
+          <span class="tag">Selvværd</span>
+        </div>
+      </div>
+
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-icon">🔍</div>
+        <h3>Psykologisk udredning</h3>
+        <p>Professionelle undersøgelser af børn, unge og voksne — inkl. forældreevnevurderinger og børnesagkyndige undersøgelser.</p>
+        <div class="service-tags">
+          <span class="tag">Kognitiv udredning</span>
+          <span class="tag">Børn & unge</span>
+          <span class="tag">Forældreskab</span>
+        </div>
+      </div>
+
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-icon">🎯</div>
+        <h3>Supervision & Coaching</h3>
+        <p>Professionel supervision for psykologer, sundhedspersonale, pædagoger og plejefamilier samt individuel coaching.</p>
+        <div class="service-tags">
+          <span class="tag">Psykologer</span>
+          <span class="tag">Sundhedspersonale</span>
+          <span class="tag">Pædagoger</span>
+        </div>
+      </div>
+
+      <div class="service-card reveal reveal-delay-3">
+        <div class="service-icon">🚨</div>
+        <h3>Akut krisehjælp</h3>
+        <p>Psykologisk støtte og debriefing efter voldsomme hændelser i privatlivet eller på arbejdspladsen — vi er klar når det gælder.</p>
+        <div class="service-tags">
+          <span class="tag">Debriefing</span>
+          <span class="tag">Traumebehandling</span>
+          <span class="tag">EMDR</span>
+        </div>
+      </div>
+
+      <div class="service-card wide reveal">
+        <div class="service-card-inner">
+          <div>
+            <div class="service-icon">📚</div>
+            <h3>Kurser, undervisning & foredrag</h3>
+            <p>Vi udbyder kurser og foredrag inden for psykologiske og pædagogiske emner til virksomheder, institutioner og private.</p>
+          </div>
+          <div>
+            <div class="service-tags" style="margin-top:0;">
+              <span class="tag">Stresshåndtering</span>
+              <span class="tag">Kommunikation</span>
+              <span class="tag">Trivsel på arbejdspladsen</span>
+              <span class="tag">Forældreskab</span>
+              <span class="tag">Skizofreni & psykoser</span>
+              <span class="tag">Sorg & krise</span>
+            </div>
+            <p style="margin-top:1.2rem; font-family:'Helvetica Neue',Arial,sans-serif; font-size:.88rem; color:var(--slate); line-height:1.7;">
+              Kontakt os for en uforpligtende snak om mulighederne for undervisning og foredrag tilpasset jeres behov.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     APPROACH
+══════════════════════════════════════════ -->
+<section id="tilgang" class="approach-section section-pad">
+  <div class="container">
+    <div class="approach-grid">
+
+      <div class="approach-visual reveal">
+        <div class="approach-big-circle">
+          <div class="approach-inner-text">
+            <div class="big-num">4</div>
+            <p>Autoriserede<br>psykologer</p>
+          </div>
+          <div class="approach-orbit orbit-1">🧘</div>
+          <div class="approach-orbit orbit-2">💬</div>
+          <div class="approach-orbit orbit-3">❤️</div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-2">
+        <div class="section-label">Vores tilgang</div>
+        <h2 class="section-title">Evidensbaseret terapi med<br>mennesket i centrum</h2>
+        <p class="section-sub" style="margin-bottom:3rem;">
+          Vi arbejder ud fra anerkendte terapeutiske metoder og tilpasser altid indsatsen til din unikke situation.
+        </p>
+        <div class="approach-list">
+          <div class="approach-item">
+            <div class="approach-num">1</div>
+            <div>
+              <h4>Kognitiv adfærdsterapi (KAT/CBT)</h4>
+              <p>En aktiv, struktureret metode der hjælper dig med at forstå og ændre negative tanke- og adfærdsmønstre, inkl. 3. bølge terapier som ACT og mindfulness.</p>
+            </div>
+          </div>
+          <div class="approach-item">
+            <div class="approach-num">2</div>
+            <div>
+              <h4>EMDR — traumebehandling</h4>
+              <p>Eye Movement Desensitization and Reprocessing er en effektiv metode til behandling af traumer, PTSD og ubehagelige minder.</p>
+            </div>
+          </div>
+          <div class="approach-item">
+            <div class="approach-num">3</div>
+            <div>
+              <h4>Psykodynamisk terapi</h4>
+              <p>En dybdegående tilgang der udforsker, hvordan tidligere erfaringer og relationer påvirker dit nuværende liv og velbefindende.</p>
+            </div>
+          </div>
+          <div class="approach-item">
+            <div class="approach-num">4</div>
+            <div>
+              <h4>Individuel tilpasning</h4>
+              <p>Vi kombinerer metoderne ud fra dine behov og ønsker — ingen forløb er ens, fordi intet menneske er ens.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     TEAM
+══════════════════════════════════════════ -->
+<section id="team" class="team-section section-pad">
+  <div class="container">
+    <div class="team-header">
+      <div>
+        <div class="section-label">Mød os</div>
+        <h2 class="section-title reveal">Fire dedikerede psykologer</h2>
+        <p class="section-sub reveal reveal-delay-1">Alle autoriserede af Psykolognævnet med en bred vifte af specialer og mange års klinisk erfaring.</p>
+      </div>
+    </div>
+
+    <div class="team-grid">
+
+      <div class="team-card reveal reveal-delay-1">
+        <div class="team-avatar">
+          <div class="avatar-placeholder ap-1">KB</div>
+        </div>
+        <div class="team-info">
+          <h3>Karin Bjerg-Christensen</h3>
+          <div class="team-role">Autoriseret psykolog · Cand.psych. 2011</div>
+          <p class="team-bio">Specialist i psykoterapi for voksne (2019). Certificeret EMDR-behandler og godkendt supervisor (DPF). Efteruddannet i kognitiv adfærdsterapi inkl. 3. bølge terapier.</p>
+          <div class="team-chips">
+            <span class="chip">EMDR</span>
+            <span class="chip">Trauma</span>
+            <span class="chip">Angst</span>
+            <span class="chip">Supervisor</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="team-card reveal reveal-delay-2">
+        <div class="team-avatar">
+          <div class="avatar-placeholder ap-2">AA</div>
+        </div>
+        <div class="team-info">
+          <h3>Anni Andreasen</h3>
+          <div class="team-role">Autoriseret psykolog · Cand.psych. 2009</div>
+          <p class="team-bio">Autoriseret siden 2013. Tilbyder individuel og gruppeterapi, parterapi, familierådgivning, supervision, coaching og psykologisk udredning af børn, unge og voksne.</p>
+          <div class="team-chips">
+            <span class="chip">Parterapi</span>
+            <span class="chip">Børn & unge</span>
+            <span class="chip">Coaching</span>
+            <span class="chip">Udredning</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="team-card reveal reveal-delay-3">
+        <div class="team-avatar">
+          <div class="avatar-placeholder ap-3">BL</div>
+        </div>
+        <div class="team-info">
+          <h3>Berit Lyhne</h3>
+          <div class="team-role">Autoriseret psykolog · Cand.psych. 1987</div>
+          <p class="team-bio">Specialist og supervisor i psykotraumatologi. Mange års erfaring med børn, unge og voksne. Tilbyder terapi, parterapi, familierådgivning og psykologisk krisehjælp.</p>
+          <div class="team-chips">
+            <span class="chip">Psykotraumatologi</span>
+            <span class="chip">Krise</span>
+            <span class="chip">Sorg & tab</span>
+            <span class="chip">Supervisor</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="team-card reveal reveal-delay-4">
+        <div class="team-avatar">
+          <div class="avatar-placeholder ap-4">SDA</div>
+        </div>
+        <div class="team-info">
+          <h3>Søren Dam Andersen</h3>
+          <div class="team-role">Autoriseret psykolog · Cand.psych.</div>
+          <p class="team-bio">Specialist og supervisor i psykoterapi. Autoriseret af Psykolognævnet. Tilbyder individuel terapi, gruppeterapi, supervision, coaching og psykologiske undersøgelser.</p>
+          <div class="team-chips">
+            <span class="chip">Psykoterapi</span>
+            <span class="chip">Supervision</span>
+            <span class="chip">Gruppeforløb</span>
+            <span class="chip">Udredning</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     TESTIMONIAL
+══════════════════════════════════════════ -->
+<section class="testimonial-section section-pad">
+  <div class="container">
+    <div class="testimonial-inner reveal">
+      <div class="testimonial-icon">"</div>
+      <p class="testimonial-text">
+        Terapien hos Psykologerne ved Slotssøen gav mig et nyt perspektiv på mit liv.
+        Jeg fandt redskaber til at håndtere min angst og lærte at sætte pris på mine egne ressourcer.
+        Jeg er taknemmelig for den professionelle og varme hjælp, jeg fik.
+      </p>
+      <div class="testimonial-attr">— Tidligere klient, individuel terapi</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PRACTICAL INFO
+══════════════════════════════════════════ -->
+<section id="praktisk" class="practical-section section-pad">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Praktisk information</div>
+      <h2 class="section-title">Det praktiske</h2>
+      <p class="section-sub">Alt du behøver at vide, inden du booker din første tid.</p>
+    </div>
+
+    <div class="practical-grid">
+
+      <div class="prac-card reveal reveal-delay-1">
+        <div class="prac-icon">📍</div>
+        <h4>Adresse</h4>
+        <address>
+          Fredericiagade 30<br>
+          6000 Kolding<br><br>
+          Vi ligger centralt i Kolding — tæt på den smukke Slotssø og med gode parkeringsmuligheder.
+        </address>
+      </div>
+
+      <div class="prac-card reveal reveal-delay-2">
+        <div class="prac-icon">💰</div>
+        <h4>Betaling & tilskud</h4>
+        <p>Vi tilbyder terapi både med og uden lægehenvisning. Med henvisning fra din læge kan du være berettiget til tilskud fra den offentlige sygesikring (gruppe 1 og 2). Vi accepterer de fleste betalingsformer.</p>
+      </div>
+
+      <div class="prac-card reveal reveal-delay-3">
+        <div class="prac-icon">📞</div>
+        <h4>Kontakt & booking</h4>
+        <p>Ring eller skriv til os for at høre mere om ventetid og booke en tid. Vi bestræber os på at svare hurtigt.</p>
+        <br>
+        <p><strong>Tlf.:</strong> 75 52 60 70<br>
+        <strong>Adresse:</strong> Fredericiagade 30, Kolding</p>
+      </div>
+
+      <div class="prac-card reveal reveal-delay-1">
+        <div class="prac-icon">⏰</div>
+        <h4>Åbningstider</h4>
+        <p>
+          <strong>Mandag–fredag:</strong> 8:00–17:00<br><br>
+          Aftentider kan aftales efter behov. Akut krisehjælp tilbydes efter særskilt aftale.
+        </p>
+      </div>
+
+      <div class="prac-card reveal reveal-delay-2">
+        <div class="prac-icon">🧒</div>
+        <h4>Hvem hjælper vi?</h4>
+        <p>Vi arbejder med <strong>børn, unge, voksne og par</strong>. Alle aldre er velkomne. Vi tilpasser altid indsatsen til den enkelte — uanset udfordring eller baggrund.</p>
+      </div>
+
+      <div class="prac-card reveal reveal-delay-3">
+        <div class="prac-icon">🔒</div>
+        <h4>Fortrolighed</h4>
+        <p>Som autoriserede psykologer er vi underlagt tavshedspligt. Alt hvad du deler med os, forbliver strengt fortroligt og behandles med fuld diskretion og respekt.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CTA BAND
+══════════════════════════════════════════ -->
+<section id="kontakt" class="cta-band">
+  <div class="container">
+    <div class="cta-inner">
+      <div class="cta-label">Tag det første skridt</div>
+      <h2 class="cta-title">Klar til at komme i gang?</h2>
+      <p class="cta-sub">Du behøver ikke vente. Ring til os i dag og hør om muligheder og ventetid — den første samtale er uforpligtende.</p>
+      <div class="cta-actions">
+        <a href="tel:+4575526070" class="btn-white">📞 Ring: 75 52 60 70</a>
+        <a href="mailto:info@psykologernevedslotssøen.dk" class="btn-ghost-white">Skriv til os</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="name">Psykologerne ved Slotssøen</div>
+        <p>Fire autoriserede psykologer med speciale i terapi, rådgivning og psykologisk udredning — centralt placeret i Kolding.</p>
+        <address class="address">
+          Fredericiagade 30<br>
+          6000 Kolding<br>
+          Tlf.: 75 52 60 70
+        </address>
+      </div>
+      <div class="footer-col">
+        <h5>Ydelser</h5>
+        <ul>
+          <li><a href="#ydelser">Individuel terapi</a></li>
+          <li><a href="#ydelser">Parterapi</a></li>
+          <li><a href="#ydelser">Gruppeterapi</a></li>
+          <li><a href="#ydelser">Psykologisk udredning</a></li>
+          <li><a href="#ydelser">Supervision</a></li>
+          <li><a href="#ydelser">Krisehjælp</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Klinikken</h5>
+        <ul>
+          <li><a href="#team">Om os</a></li>
+          <li><a href="#tilgang">Vores tilgang</a></li>
+          <li><a href="#praktisk">Praktisk info</a></li>
+          <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Psykologer</h5>
+        <ul>
+          <li><a href="#team">Karin Bjerg-Christensen</a></li>
+          <li><a href="#team">Anni Andreasen</a></li>
+          <li><a href="#team">Berit Lyhne</a></li>
+          <li><a href="#team">Søren Dam Andersen</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Psykologerne ved Slotssøen · Fredericiagade 30, 6000 Kolding</span>
+      <span>Autoriserede psykologer · <a href="#">Privatlivspolitik</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════ -->
+<script>
+/* ── Animated lake canvas ── */
+(function () {
+  const canvas = document.getElementById('lake-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, t = 0;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function drawLake() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Sky gradient
+    const sky = ctx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0,   '#dceee8');
+    sky.addColorStop(0.5, '#c2ddd5');
+    sky.addColorStop(1,   '#a8d5c2');
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, W, H);
+
+    // Distant treeline silhouette
+    ctx.fillStyle = 'rgba(74,124,111,0.28)';
+    ctx.beginPath();
+    ctx.moveTo(0, H * 0.62);
+    for (let x = 0; x <= W; x += 4) {
+      const y = H * 0.62 +
+        Math.sin(x * 0.006 + t * 0.18) * 22 +
+        Math.sin(x * 0.014 + t * 0.09) * 12;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(W, H);
+    ctx.lineTo(0, H);
+    ctx.closePath();
+    ctx.fill();
+
+    // Closer treeline
+    ctx.fillStyle = 'rgba(46,85,72,0.45)';
+    ctx.beginPath();
+    ctx.moveTo(0, H * 0.72);
+    for (let x = 0; x <= W; x += 4) {
+      const y = H * 0.72 +
+        Math.sin(x * 0.009 + t * 0.22 + 1) * 18 +
+        Math.sin(x * 0.020 + t * 0.12) * 9;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(W, H);
+    ctx.lineTo(0, H);
+    ctx.closePath();
+    ctx.fill();
+
+    // Water reflection ripples
+    const waterTop = H * 0.74;
+    const waterGrad = ctx.createLinearGradient(0, waterTop, 0, H);
+    waterGrad.addColorStop(0, 'rgba(168,213,194,0.70)');
+    waterGrad.addColorStop(1, 'rgba(134,189,172,0.85)');
+    ctx.fillStyle = waterGrad;
+    ctx.fillRect(0, waterTop, W, H - waterTop);
+
+    // Ripple lines
+    for (let r = 0; r < 12; r++) {
+      const ry = waterTop + (r / 12) * (H - waterTop) * 0.9 + 10;
+      const amplitude = 1.5 + r * 0.3;
+      const freq = 0.008 + r * 0.001;
+      ctx.strokeStyle = `rgba(255,255,255,${0.07 + r * 0.015})`;
+      ctx.lineWidth = 1 + r * 0.1;
+      ctx.beginPath();
+      ctx.moveTo(0, ry);
+      for (let x = 0; x <= W; x += 3) {
+        const y = ry + Math.sin(x * freq + t * (0.5 + r * 0.08)) * amplitude;
+        ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    // Shimmer spots
+    for (let s = 0; s < 8; s++) {
+      const sx = (s / 8) * W + Math.sin(t * 0.3 + s) * 30;
+      const sy = waterTop + ((s * 137) % (H - waterTop - 40));
+      const sr = 3 + Math.abs(Math.sin(t * 0.8 + s)) * 8;
+      const shimmer = ctx.createRadialGradient(sx, sy, 0, sx, sy, sr);
+      shimmer.addColorStop(0, 'rgba(255,255,255,0.45)');
+      shimmer.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = shimmer;
+      ctx.beginPath();
+      ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    t += 0.012;
+    requestAnimationFrame(drawLake);
+  }
+  drawLake();
+})();
+
+/* ── Nav scroll class ── */
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 30);
+});
+
+/* ── Scroll reveal ── */
+(function () {
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(el => io.observe(el));
+})();
+</script>
+</body>
+</html>
