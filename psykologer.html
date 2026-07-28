@@ -3,7 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Psykologerne ved Slotssøen — Kolding</title>
+  <title>Psykologerne ved Slotssøen — Autoriserede psykologer i Kolding</title>
+  <meta name="description" content="Fire autoriserede psykologer i Kolding. Vi tilbyder individuel terapi, parterapi, gruppeterapi, psykologisk udredning og krisehjælp. Book en tid i dag." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Psykologerne ved Slotssøen — Kolding" />
+  <meta property="og:description" content="Fire autoriserede psykologer centralt i Kolding. Terapi, rådgivning og psykologisk udredning for børn, unge, voksne og par." />
+  <meta property="og:url" content="https://bjonki.github.io/ai-rejsen/psykologer.html" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Psykologerne ved Slotssøen — Kolding" />
+  <meta name="twitter:description" content="Fire autoriserede psykologer i Kolding. Individuel terapi, parterapi, udredning og krisehjælp." />
   <style>
     /* ──────────────────────────────────────────────
        DESIGN TOKENS
@@ -770,6 +778,392 @@
     @media (max-width: 480px) {
       .team-grid { grid-template-columns: 1fr; }
     }
+
+    /* ──────────────────────────────────────────────
+       FOCUS STYLES (accessibility)
+    ────────────────────────────────────────────── */
+    :focus-visible {
+      outline: 3px solid var(--sage);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    /* ──────────────────────────────────────────────
+       HERO ENTRANCE ANIMATION
+    ────────────────────────────────────────────── */
+    @keyframes heroFadeUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .hero-content {
+      animation: heroFadeUp .8s cubic-bezier(.2,.7,.2,1) both;
+    }
+    .hero-stats {
+      animation: heroFadeUp .8s cubic-bezier(.2,.7,.2,1) .25s both;
+    }
+    .hero-accent {
+      animation: heroFadeUp .8s cubic-bezier(.2,.7,.2,1) .45s both;
+    }
+
+    /* ──────────────────────────────────────────────
+       AVATAR SHIMMER
+    ────────────────────────────────────────────── */
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position:  200% 0; }
+    }
+    .avatar-placeholder::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(
+        100deg,
+        transparent 30%,
+        rgba(255,255,255,.22) 50%,
+        transparent 70%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 2.4s infinite linear;
+    }
+
+    /* ──────────────────────────────────────────────
+       HAMBURGER / MOBILE MENU
+    ────────────────────────────────────────────── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: .4rem;
+      border-radius: 8px;
+      transition: background .2s;
+    }
+    .hamburger:hover { background: rgba(74,124,111,.1); }
+    .hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--sage-dk);
+      border-radius: 2px;
+      transition: transform .3s, opacity .3s;
+    }
+    .hamburger[aria-expanded="true"] span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    .hamburger[aria-expanded="true"] span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger[aria-expanded="true"] span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .nav-mobile {
+      display: none;
+      position: absolute;
+      top: 100%; left: 0; right: 0;
+      background: rgba(247,244,239,.97);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(74,124,111,.15);
+      padding: 1.2rem 5vw 1.6rem;
+      flex-direction: column;
+      gap: .2rem;
+      box-shadow: 0 8px 32px var(--shadow);
+    }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1rem;
+      color: var(--slate);
+      padding: .75rem 0;
+      border-bottom: 1px solid rgba(74,124,111,.1);
+      letter-spacing: .03em;
+      transition: color .2s;
+    }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile a:hover { color: var(--sage); }
+    .nav-mobile .nav-cta-mobile {
+      margin-top: .8rem;
+      background: var(--sage);
+      color: var(--white) !important;
+      border-radius: 50px;
+      padding: .75rem 1.4rem !important;
+      text-align: center;
+      font-weight: 600;
+      border-bottom: none !important;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      nav { position: fixed; flex-wrap: wrap; }
+    }
+
+    /* ──────────────────────────────────────────────
+       TESTIMONIAL CAROUSEL
+    ────────────────────────────────────────────── */
+    .testimonial-carousel {
+      position: relative;
+    }
+    .testimonial-slide {
+      display: none;
+      animation: fadeSlide .5s ease;
+    }
+    .testimonial-slide.active { display: block; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: .6rem;
+      margin-top: 2rem;
+    }
+    .carousel-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(74,124,111,.25);
+      border: none;
+      cursor: pointer;
+      transition: background .3s, transform .3s;
+      padding: 0;
+    }
+    .carousel-dot.active {
+      background: var(--sage);
+      transform: scale(1.3);
+    }
+
+    /* ──────────────────────────────────────────────
+       FAQ ACCORDION
+    ────────────────────────────────────────────── */
+    .faq-section { background: var(--mist); }
+    .faq-list {
+      max-width: 780px;
+      margin: 3rem auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: .8rem;
+    }
+    details.faq-item {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1px solid rgba(74,124,111,.12);
+      overflow: hidden;
+      transition: box-shadow .25s;
+    }
+    details.faq-item[open] {
+      box-shadow: 0 8px 30px rgba(42,74,62,.1);
+    }
+    summary.faq-q {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.3rem 1.6rem;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink);
+      list-style: none;
+      user-select: none;
+    }
+    summary.faq-q::-webkit-details-marker { display: none; }
+    .faq-icon {
+      width: 28px; height: 28px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--mist);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      color: var(--sage);
+      font-weight: 400;
+      transition: background .25s, transform .25s;
+    }
+    details.faq-item[open] .faq-icon {
+      background: var(--water-lt);
+      transform: rotate(45deg);
+    }
+    .faq-a {
+      padding: 0 1.6rem 1.3rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .93rem;
+      color: var(--slate);
+      line-height: 1.8;
+    }
+
+    /* ──────────────────────────────────────────────
+       GOOGLE MAPS CARD
+    ────────────────────────────────────────────── */
+    .map-card {
+      grid-column: span 3;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(74,124,111,.1);
+      height: 260px;
+    }
+    .map-card iframe {
+      width: 100%; height: 100%; border: none;
+    }
+    @media (max-width: 768px) {
+      .map-card { grid-column: span 1; height: 200px; }
+    }
+
+    /* ──────────────────────────────────────────────
+       CONTACT FORM SECTION
+    ────────────────────────────────────────────── */
+    .contact-section { background: var(--cream); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 5rem;
+      align-items: start;
+      margin-top: 3rem;
+    }
+    .contact-info { display: flex; flex-direction: column; gap: 1.8rem; }
+    .contact-info-item {
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .ci-icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+      background: var(--mist);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+    }
+    .ci-text h5 {
+      font-size: .9rem; font-weight: 700; color: var(--ink); margin-bottom: .2rem;
+    }
+    .ci-text p, .ci-text a {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .88rem; color: var(--slate); line-height: 1.6;
+    }
+    .ci-text a:hover { color: var(--sage); }
+
+    .contact-form {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 2.6rem;
+      border: 1px solid rgba(74,124,111,.12);
+      box-shadow: 0 12px 40px rgba(42,74,62,.08);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+      margin-bottom: 1.1rem;
+    }
+    .form-group label {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: .75rem 1rem;
+      border: 1.5px solid rgba(74,124,111,.2);
+      border-radius: 10px;
+      background: var(--cream);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .93rem;
+      color: var(--ink);
+      transition: border-color .25s, box-shadow .25s;
+      appearance: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--sage);
+      box-shadow: 0 0 0 3px rgba(74,124,111,.12);
+    }
+    .form-group textarea { resize: vertical; min-height: 110px; }
+    .form-note {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .78rem;
+      color: var(--slate);
+      margin-bottom: 1.4rem;
+      line-height: 1.6;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background: var(--sage);
+      color: var(--white);
+      border: none;
+      border-radius: 50px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .95rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      cursor: pointer;
+      transition: background .25s, transform .2s, box-shadow .25s;
+      box-shadow: 0 4px 24px rgba(74,124,111,.25);
+    }
+    .btn-submit:hover {
+      background: var(--sage-dk);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(74,124,111,.35);
+    }
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+      color: var(--sage-dk);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+    .form-success .success-icon { font-size: 2.5rem; margin-bottom: .8rem; }
+    .form-success h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+    .form-success p { font-size: .9rem; color: var(--slate); }
+
+    @media (max-width: 900px) {
+      .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .contact-form { padding: 1.6rem; }
+    }
+
+    /* ──────────────────────────────────────────────
+       STICKY MOBILE CTA
+    ────────────────────────────────────────────── */
+    .sticky-book {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: .9rem 1.2rem;
+      background: rgba(247,244,239,.97);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(74,124,111,.15);
+      box-shadow: 0 -4px 24px rgba(42,74,62,.12);
+      transition: transform .35s cubic-bezier(.2,.7,.2,1);
+    }
+    .sticky-book.hidden { transform: translateY(110%); }
+    .sticky-book a {
+      display: block;
+      text-align: center;
+      background: var(--sage);
+      color: var(--white);
+      padding: .85rem;
+      border-radius: 50px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: .95rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      box-shadow: 0 4px 20px rgba(74,124,111,.3);
+    }
+    @media (max-width: 768px) {
+      .sticky-book { display: block; }
+      body { padding-bottom: 80px; }
+    }
   </style>
 </head>
 <body>
@@ -787,8 +1181,19 @@
     <a href="#tilgang">Tilgang</a>
     <a href="#team">Psykologer</a>
     <a href="#praktisk">Praktisk info</a>
+    <a href="#kontakt">Kontakt</a>
   </div>
   <a href="tel:+4575526070" class="nav-cta">Kontakt os</a>
+  <button class="hamburger" id="hamburger" aria-label="Åbn menu" aria-expanded="false" aria-controls="nav-mobile">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-mobile" id="nav-mobile" role="navigation" aria-label="Mobilmenu">
+    <a href="#ydelser">Ydelser</a>
+    <a href="#tilgang">Tilgang</a>
+    <a href="#team">Psykologer</a>
+    <a href="#praktisk">Praktisk info</a>
+    <a href="#kontakt" class="nav-cta-mobile">📅 Book en tid</a>
+  </div>
 </nav>
 
 <!-- ══════════════════════════════════════════
@@ -1162,14 +1567,42 @@
 ══════════════════════════════════════════ -->
 <section class="testimonial-section section-pad">
   <div class="container">
-    <div class="testimonial-inner reveal">
-      <div class="testimonial-icon">"</div>
-      <p class="testimonial-text">
-        Terapien hos Psykologerne ved Slotssøen gav mig et nyt perspektiv på mit liv.
-        Jeg fandt redskaber til at håndtere min angst og lærte at sætte pris på mine egne ressourcer.
-        Jeg er taknemmelig for den professionelle og varme hjælp, jeg fik.
-      </p>
-      <div class="testimonial-attr">— Tidligere klient, individuel terapi</div>
+    <div class="testimonial-inner reveal testimonial-carousel" id="testimonialCarousel">
+
+      <div class="testimonial-slide active">
+        <div class="testimonial-icon">"</div>
+        <p class="testimonial-text">
+          Terapien hos Psykologerne ved Slotssøen gav mig et nyt perspektiv på mit liv.
+          Jeg fandt redskaber til at håndtere min angst og lærte at sætte pris på mine egne ressourcer.
+          Jeg er taknemmelig for den professionelle og varme hjælp, jeg fik.
+        </p>
+        <div class="testimonial-attr">— Tidligere klient, individuel terapi</div>
+      </div>
+
+      <div class="testimonial-slide">
+        <div class="testimonial-icon">"</div>
+        <p class="testimonial-text">
+          Som par kom vi med mange låste følelser og svære samtaler. Forløbet hjalp os med at forstå
+          hinanden bedre og finde en vej frem sammen. Vi er i dag et langt stærkere par.
+        </p>
+        <div class="testimonial-attr">— Tidligere klienter, parterapi</div>
+      </div>
+
+      <div class="testimonial-slide">
+        <div class="testimonial-icon">"</div>
+        <p class="testimonial-text">
+          Min søn blomstrede op efter forløbet. Psykologen mødte ham med ro og nærvær og fandt
+          en tilgang, der virkede for ham. Det har gjort en kæmpe forskel for hele familien.
+        </p>
+        <div class="testimonial-attr">— Forælder, børneterapi</div>
+      </div>
+
+      <div class="carousel-dots">
+        <button class="carousel-dot active" aria-label="Vis citat 1" data-slide="0"></button>
+        <button class="carousel-dot" aria-label="Vis citat 2" data-slide="1"></button>
+        <button class="carousel-dot" aria-label="Vis citat 3" data-slide="2"></button>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1233,6 +1666,188 @@
         <p>Som autoriserede psykologer er vi underlagt tavshedspligt. Alt hvad du deler med os, forbliver strengt fortroligt og behandles med fuld diskretion og respekt.</p>
       </div>
 
+      <div class="map-card reveal">
+        <iframe
+          src="https://maps.google.com/maps?q=Fredericiagade+30,+6000+Kolding,+Denmark&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Psykologerne ved Slotssøen — Fredericiagade 30, Kolding"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     FAQ
+══════════════════════════════════════════ -->
+<section class="faq-section section-pad">
+  <div class="container">
+    <div class="reveal" style="text-align:center;">
+      <div class="section-label" style="justify-content:center;">Spørgsmål & svar</div>
+      <h2 class="section-title">Ofte stillede spørgsmål</h2>
+      <p class="section-sub" style="margin:0 auto;">Finder du ikke svar her, er du altid velkommen til at ringe til os på <strong>75 52 60 70</strong>.</p>
+    </div>
+    <div class="faq-list reveal reveal-delay-1">
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          Kan jeg få tilskud fra sygesikringen?
+          <span class="faq-icon">+</span>
+        </summary>
+        <div class="faq-a">
+          Ja — med en henvisning fra din praktiserende læge kan du være berettiget til tilskud fra den offentlige sygesikring (gruppe 1 og 2). Tilskuddet dækker en del af honoraret ved op til 12 sessioner. Kontakt os, og vi hjælper dig godt i gang.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          Hvad koster en session?
+          <span class="faq-icon">+</span>
+        </summary>
+        <div class="faq-a">
+          Prisen varierer afhængigt af ydelsestype og psykolog. Ring til os på <strong>75 52 60 70</strong> for aktuelle priser. Vi accepterer de fleste betalingsformer, og der kan tages hensyn til individuelle ønsker.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          Hvor lang er ventetiden?
+          <span class="faq-icon">+</span>
+        </summary>
+        <div class="faq-a">
+          Ventetiden varierer, og det er bedst at kontakte os direkte for at høre om den aktuelle situation. Vi bestræber os på at give hurtig respons og finde en tid, der passer dig — herunder aftentider efter behov.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          Hvem kan komme til behandling hos jer?
+          <span class="faq-icon">+</span>
+        </summary>
+        <div class="faq-a">
+          Vi tilbyder behandling til <strong>børn, unge, voksne og par</strong> — uanset udfordring eller baggrund. Vores psykologer dækker et bredt spektrum af specialer, og vi finder altid den rette psykolog til dig.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          Hvad sker der ved den første samtale?
+          <span class="faq-icon">+</span>
+        </summary>
+        <div class="faq-a">
+          Den første samtale er en uforpligtende afklarende session, hvor psykologen lytter til dig og dine behov. Sammen lægger I en plan for et eventuelt videre forløb. Det er helt normalt at have spørgsmål — vi er der for at hjælpe.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          Er det fortroligt, hvad jeg fortæller?
+          <span class="faq-icon">+</span>
+        </summary>
+        <div class="faq-a">
+          Ja, absolut. Som autoriserede psykologer er vi underlagt <strong>tavshedspligt</strong>. Alt hvad du deler med os, forbliver strengt fortroligt og behandles med fuld diskretion og respekt for dig som person.
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CONTACT FORM
+══════════════════════════════════════════ -->
+<section id="kontakt" class="contact-section section-pad">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Skriv til os</div>
+      <h2 class="section-title">Book en tid eller stil et spørgsmål</h2>
+      <p class="section-sub">Udfyld formularen, og vi vender tilbage hurtigst muligt — typisk inden for en arbejdsdag.</p>
+    </div>
+    <div class="contact-grid">
+
+      <div class="contact-info reveal reveal-delay-1">
+        <div class="contact-info-item">
+          <div class="ci-icon">📞</div>
+          <div class="ci-text">
+            <h5>Telefon</h5>
+            <p><a href="tel:+4575526070">75 52 60 70</a><br>Mandag–fredag 8:00–17:00</p>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="ci-icon">✉️</div>
+          <div class="ci-text">
+            <h5>E-mail</h5>
+            <p><a href="mailto:info@psykologernevedslotssoen.dk">info@psykologernevedslotssoen.dk</a></p>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="ci-icon">📍</div>
+          <div class="ci-text">
+            <h5>Adresse</h5>
+            <p>Fredericiagade 30<br>6000 Kolding</p>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="ci-icon">⏰</div>
+          <div class="ci-text">
+            <h5>Åbningstider</h5>
+            <p>Mandag–fredag: 8:00–17:00<br>Aftentider efter aftale</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form reveal reveal-delay-2" id="contactFormWrap">
+        <div id="formSuccess" class="form-success">
+          <div class="success-icon">✅</div>
+          <h4>Tak for din besked!</h4>
+          <p>Vi vender tilbage hurtigst muligt — typisk inden for en arbejdsdag.</p>
+        </div>
+        <form id="contactForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fname">Fornavn *</label>
+              <input type="text" id="fname" name="fname" required placeholder="Dit fornavn" autocomplete="given-name" />
+            </div>
+            <div class="form-group">
+              <label for="lname">Efternavn *</label>
+              <input type="text" id="lname" name="lname" required placeholder="Dit efternavn" autocomplete="family-name" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Telefon *</label>
+              <input type="tel" id="phone" name="phone" required placeholder="Dit telefonnummer" autocomplete="tel" />
+            </div>
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" name="email" placeholder="Din e-mailadresse" autocomplete="email" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="service">Ydelse</label>
+            <select id="service" name="service">
+              <option value="">Vælg ydelse (valgfrit)</option>
+              <option>Individuel terapi</option>
+              <option>Par- og familieterapi</option>
+              <option>Børn &amp; unge</option>
+              <option>Psykologisk udredning</option>
+              <option>Supervision &amp; coaching</option>
+              <option>Krisehjælp</option>
+              <option>Andet</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Besked *</label>
+            <textarea id="message" name="message" required placeholder="Beskriv kort hvad du søger hjælp til, eller stil dit spørgsmål…"></textarea>
+          </div>
+          <p class="form-note">Dine oplysninger behandles fortroligt og bruges udelukkende til at besvare din henvendelse. Vi deler ikke dine data med tredjepart.</p>
+          <button type="submit" class="btn-submit">Send besked →</button>
+        </form>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1240,7 +1855,7 @@
 <!-- ══════════════════════════════════════════
      CTA BAND
 ══════════════════════════════════════════ -->
-<section id="kontakt" class="cta-band">
+<section class="cta-band">
   <div class="container">
     <div class="cta-inner">
       <div class="cta-label">Tag det første skridt</div>
@@ -1253,6 +1868,11 @@
     </div>
   </div>
 </section>
+
+<!-- Sticky mobile CTA -->
+<div class="sticky-book hidden" id="stickyBook">
+  <a href="#kontakt">📅 Book en tid — ring: 75 52 60 70</a>
+</div>
 
 <!-- ══════════════════════════════════════════
      FOOTER
@@ -1425,6 +2045,103 @@ window.addEventListener('scroll', () => {
     });
   }, { threshold: 0.12 });
   els.forEach(el => io.observe(el));
+})();
+
+/* ── Hamburger menu ── */
+(function () {
+  const btn = document.getElementById('hamburger');
+  const menu = document.getElementById('nav-mobile');
+  if (!btn || !menu) return;
+
+  btn.addEventListener('click', () => {
+    const isOpen = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen);
+    btn.setAttribute('aria-label', isOpen ? 'Luk menu' : 'Åbn menu');
+  });
+
+  // Close on link click
+  menu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      menu.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Åbn menu');
+    });
+  });
+})();
+
+/* ── Testimonial carousel ── */
+(function () {
+  const slides = document.querySelectorAll('.testimonial-slide');
+  const dots   = document.querySelectorAll('.carousel-dot');
+  if (!slides.length) return;
+
+  let current = 0;
+  let timer;
+
+  function goTo(idx) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = (idx + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+
+  function startAuto() {
+    timer = setInterval(() => goTo(current + 1), 5000);
+  }
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      clearInterval(timer);
+      goTo(parseInt(dot.dataset.slide, 10));
+      startAuto();
+    });
+  });
+
+  startAuto();
+})();
+
+/* ── Sticky mobile CTA ── */
+(function () {
+  const bar  = document.getElementById('stickyBook');
+  const hero = document.querySelector('.hero');
+  if (!bar || !hero) return;
+
+  function update() {
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    bar.classList.toggle('hidden', heroBottom > 0);
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
+/* ── Contact form (demo submit) ── */
+(function () {
+  const form    = document.getElementById('contactForm');
+  const success = document.getElementById('formSuccess');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Basic validation
+    const required = form.querySelectorAll('[required]');
+    let valid = true;
+    required.forEach(field => {
+      if (!field.value.trim()) {
+        field.style.borderColor = '#c0392b';
+        valid = false;
+      } else {
+        field.style.borderColor = '';
+      }
+    });
+    if (!valid) return;
+
+    // Show success state
+    form.style.display = 'none';
+    success.style.display = 'block';
+  });
 })();
 </script>
 </body>
