@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10121c">
+  <meta name="description" content="A free, instant-play falling-block puzzle. Play with your keyboard or touch controls.">
+  <title>Neon Blocks | Tetris-style puzzle</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./game.js" defer></script>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div><span class="eyebrow">THE CLASSIC, IN A NEW LIGHT</span><h1>NEON<span>BLOCKS</span></h1></div>
+      <button id="pause" class="quiet" disabled aria-label="Pause game">Pause <kbd>P</kbd></button>
+    </header>
+    <div class="game-layout">
+      <aside class="left-panel">
+        <section class="panel"><h2>HOLD <kbd>C</kbd></h2><canvas id="hold" width="128" height="96" aria-label="Held piece"></canvas></section>
+        <section class="panel instructions">
+          <h2>HOW TO PLAY</h2>
+          <p><kbd>&larr;</kbd><kbd>&rarr;</kbd><span>Move</span></p>
+          <p><kbd>&uarr;</kbd><span>Rotate clockwise</span></p>
+          <p><kbd>Z</kbd><span>Rotate back</span></p>
+          <p><kbd>&darr;</kbd><span>Soft drop</span></p>
+          <p><kbd>Space</kbd><span>Hard drop</span></p>
+          <p><kbd>C</kbd><span>Hold piece</span></p>
+          <p><kbd>P</kbd><span>Pause</span></p>
+        </section>
+        <p class="tip">Fill a row. Clear your mind.<br>Clear four for a Tetris.</p>
+      </aside>
+      <div class="board-wrap">
+        <canvas id="board" width="300" height="600" aria-label="Tetris playfield, 10 columns by 20 rows"></canvas>
+        <div id="overlay" class="overlay">
+          <div class="overlay-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <h2 id="overlay-title">Find your flow.</h2>
+          <p id="overlay-text">Stack, rotate, clear.<br>How far can you go?</p>
+          <button id="start" class="primary">Let's play</button>
+          <small id="overlay-hint">Press Enter to start</small>
+        </div>
+      </div>
+      <aside class="right-panel">
+        <section class="panel stats" aria-live="polite" aria-atomic="true">
+          <h2>SCORE</h2><div id="score" class="score">0</div>
+          <div class="stat-row"><span>BEST</span><strong id="best">0</strong></div>
+          <div class="stat-row"><span>LEVEL</span><strong id="level">1</strong></div>
+          <div class="stat-row"><span>LINES</span><strong id="lines">0</strong></div>
+        </section>
+        <section class="panel mobile-hold"><h2>HOLD</h2><canvas id="hold-mobile" width="128" height="82" aria-label="Held piece"></canvas></section>
+        <section class="panel"><h2>UP NEXT</h2><canvas id="next" width="128" height="250" aria-label="Next three pieces"></canvas></section>
+        <div id="message" class="message" role="status"></div>
+      </aside>
+    </div>
+    <nav class="touch-controls" aria-label="Touch game controls">
+      <button data-action="hold" aria-label="Hold piece">HOLD</button>
+      <button data-action="rotate" aria-label="Rotate clockwise">&#8635;</button>
+      <button data-action="left" aria-label="Move left">&larr;</button>
+      <button data-action="down" aria-label="Soft drop">&darr;</button>
+      <button data-action="right" aria-label="Move right">&rarr;</button>
+      <button data-action="drop" aria-label="Hard drop">DROP</button>
+    </nav>
+    <footer><span class="status-dot"></span> NO DOWNLOADS. JUST ONE MORE GAME.<span id="storage-note"></span></footer>
+  </main>
+</body>
+</html>
